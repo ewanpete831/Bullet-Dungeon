@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace Bullet_Dungeon
-{ 
+{
     class Player
     {
         public int x, y;
@@ -18,10 +19,13 @@ namespace Bullet_Dungeon
             x = _x;
             y = _y;
         }
-        public void Move(bool up, bool down, bool left, bool right)
+        public void Move(bool up, bool down, bool left, bool right, Size screenSize, List<Obstacle> obstacles)
         {
+            #region speed
             int speed;
-            if(up && !down && !left && !right)
+            int lastX = x;
+            int lastY = y;
+            if (up && !down && !left && !right)
             {
                 speed = straightSpeed;
             }
@@ -42,23 +46,65 @@ namespace Bullet_Dungeon
                 speed = diagSpeed;
             }
 
-
-
+            #endregion
+            #region direction
             if (up)
             {
                 y -= speed;
             }
-           if(down)
+            if (down)
             {
                 y += speed;
             }
-           if(left)
+            if (left)
             {
                 x -= speed;
             }
-           if(right)
+            if (right)
             {
                 x += speed;
+            }
+            #endregion
+
+            if (x < 0 || x > screenSize.Width - size)
+            {
+                x = lastX;
+            }
+            if (y < 0 || y > screenSize.Height - size)
+            {
+                y = lastY;
+            }
+
+            foreach (Obstacle o in obstacles)
+            {
+                Rectangle obstacleRect = new Rectangle(o.x, o.y, o.width, o.height);
+                Rectangle playerRect = new Rectangle(x, y, size, size);
+
+                if (playerRect.IntersectsWith(obstacleRect))
+                {
+                    if (x > obstacleRect.Left - size && x < obstacleRect.Right)
+                    {
+                        if (y < obstacleRect.Bottom || y > obstacleRect.Top - size)
+                        {
+                            y = lastY;
+                        }
+                    }
+                    if (y > obstacleRect.Top - size && y < obstacleRect.Bottom)
+                    {
+                        if (x < obstacleRect.Right || x > obstacleRect.Left - size)
+                        {
+                            x = lastX;
+                            if(up)
+                            {
+                                y -= diagSpeed;
+                            }
+                            if(down)
+                            {
+                                y += diagSpeed;
+                            }
+                        }
+                    }
+                }
             }
         }
     }

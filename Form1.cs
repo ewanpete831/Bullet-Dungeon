@@ -15,7 +15,13 @@ namespace Bullet_Dungeon
         public Form1()
         {
             InitializeComponent();
+            setSize();
             ChangeScreen(this, new MenuScreen());
+        }
+
+        public void setSize()
+        {
+             this.Size = Screen.FromControl(this).Bounds.Size;
         }
 
         public static void ChangeScreen(object sender, UserControl next)
@@ -33,9 +39,6 @@ namespace Bullet_Dungeon
                 f = current.FindForm();
                 f.Controls.Remove(current);
             }
-
-            next.Location = new Point((f.ClientSize.Width - next.Width) / 2,
-                (f.ClientSize.Height - next.Height) / 2);
 
             f.Controls.Add(next);
 
