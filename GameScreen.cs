@@ -17,6 +17,7 @@ namespace Bullet_Dungeon
         SolidBrush playerBrush = new SolidBrush(Color.Red);
         SolidBrush playerBulletBrush = new SolidBrush(Color.Purple);
         SolidBrush boxBrush = new SolidBrush(Color.Brown);
+        SolidBrush testBrush = new SolidBrush(Color.White);
         Pen testPen = new Pen(Color.White);
         Font testFont = new Font("Times New Roman", 12);
 
@@ -26,6 +27,7 @@ namespace Bullet_Dungeon
         int shotInterval;
         bool reloading;
         int reloadTimer;
+        int dodgeTimer;
 
         bool upPressed, downPressed, rightPressed, leftPressed;
 
@@ -43,69 +45,86 @@ namespace Bullet_Dungeon
         {
             p1.x = 100;
             p1.y = 400;
+            p1.invulnerable = false;
 
             ammo = 10;
 
-            levelObstacles.Add(new Obstacle(100, 250, 60, 50, 3, "box"));
+            levelObstacles.Add(new Obstacle(100, 250, 70, 20, 3, "box"));
+            levelObstacles.Add(new Obstacle(400, 250, 10, 100, 3, "box"));
+            levelObstacles.Add(new Obstacle(10, 386, 60, 50, 3, "box"));
         }
 
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
-            switch (e.KeyCode)
+            if (p1.invulnerable == false)
             {
-                case Keys.W:
-                    upPressed = true;
-                    break;
-                case Keys.S:
-                    downPressed = true;
-                    break;
-                case Keys.A:
-                    leftPressed = true;
-                    break;
-                case Keys.D:
-                    rightPressed = true;
-                    break;
-                case Keys.R:
-                    Reload();
-                    break;
+                switch (e.KeyCode)
+                {
+                    case Keys.W:
+                        upPressed = true;
+                        break;
+                    case Keys.S:
+                        downPressed = true;
+                        break;
+                    case Keys.A:
+                        leftPressed = true;
+                        break;
+                    case Keys.D:
+                        rightPressed = true;
+                        break;
+                    case Keys.R:
+                        Reload();
+                        break;
+                }
             }
         }
+
         private void GameScreen_KeyUp(object sender, KeyEventArgs e)
         {
-            switch (e.KeyCode)
+            if (p1.invulnerable == false)
             {
-                case Keys.W:
-                    upPressed = false;
-                    break;
-                case Keys.S:
-                    downPressed = false;
-                    break;
-                case Keys.A:
-                    leftPressed = false;
-                    break;
-                case Keys.D:
-                    rightPressed = false;
-                    break;
+                switch (e.KeyCode)
+                {
+                    case Keys.W:
+                        upPressed = false;
+                        break;
+                    case Keys.S:
+                        downPressed = false;
+                        break;
+                    case Keys.A:
+                        leftPressed = false;
+                        break;
+                    case Keys.D:
+                        rightPressed = false;
+                        break;
+                }
             }
         }
 
         private void GameScreen_MouseDown(object sender, MouseEventArgs e)
         {
-            if (ammo > 0 && shotInterval == 0 && reloading == false)
+            if (e.Button == MouseButtons.Left)
             {
-                playerBullets.Add(new Bullet(p1.x, p1.y, System.Windows.Forms.Cursor.Position.X, System.Windows.Forms.Cursor.Position.Y));
-                shotInterval = 6;
-                ammo -= 1;
+                if (ammo > 0 && shotInterval == 0 && reloading == false)
+                {
+                    playerBullets.Add(new Bullet(p1.x, p1.y, System.Windows.Forms.Cursor.Position.X, System.Windows.Forms.Cursor.Position.Y));
+                    shotInterval = 6;
+                    ammo -= 1;
+                }
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                Dodge();
             }
         }
 
         private void gameTimer_Tick(object sender, EventArgs e)
         {
-            if(shotInterval > 0)
+            if (shotInterval > 0)
             {
                 shotInterval--;
             }
-            if(reloadTimer > 0)
+            if (reloadTimer > 0)
             {
                 reloadTimer--;
             }
@@ -113,14 +132,23 @@ namespace Bullet_Dungeon
             {
                 reloading = false;
             }
-            if(reloadTimer == 1)
+            if (reloadTimer == 1)
             {
                 ammo = 10;
+            }
+            if(dodgeTimer > 0)
+            {
+                dodgeTimer--;
+            }
+            if(dodgeTimer == 1)
+            {
+                p1.invulnerable = false;
+                upPressed = leftPressed = downPressed = rightPressed = false;
             }
 
 
             p1.Move(upPressed, downPressed, leftPressed, rightPressed, this.Size, levelObstacles);
-            
+
 
             foreach (Bullet b in playerBullets)
             {
@@ -135,10 +163,11 @@ namespace Bullet_Dungeon
                 }
             }
 
-            for (int i = 0; i < playerBullets.Count; i++)
+            foreach (Obstacle o in levelObstacles)
             {
-                foreach (Obstacle o in levelObstacles)
+                for (int i = 0; i < playerBullets.Count; i++)
                 {
+
                     if (playerBullets[i].HitObstacle(o))
                     {
                         o.hp--;
@@ -147,18 +176,22 @@ namespace Bullet_Dungeon
                 }
             }
 
-            for(int i = 0; i < levelObstacles.Count; i++)
+            for (int i = 0; i < levelObstacles.Count; i++)
             {
-                if(levelObstacles[i].hp < 1)
+                if (levelObstacles[i].hp < 1)
                 {
                     levelObstacles.RemoveAt(i);
                 }
             }
 
             Refresh();
-
         }
 
+        private void Dodge()
+        {
+            p1.invulnerable = true;
+            dodgeTimer = 20;
+        }
         private void Reload()
         {
             reloading = true;
@@ -169,25 +202,33 @@ namespace Bullet_Dungeon
 
         private void GameScreen_Paint(object sender, PaintEventArgs e)
         {
-            if(reloading == false)
+            if (reloading == false)
             {
                 ammoText = ammo.ToString();
             }
 
+            if (p1.invulnerable == true)
+            {
+                playerBrush.Color = Color.White;
+            }
+            else
+            {
+                playerBrush.Color = Color.Red;
+            }
 
             e.Graphics.FillRectangle(playerBrush, p1.x, p1.y, p1.size, p1.size);
-            e.Graphics.DrawString($"{ammoText}", testFont, playerBrush, 0, 0);
+
+            e.Graphics.DrawString($"{ammoText}", testFont, testBrush, 0, 0);
 
             foreach (Bullet b in playerBullets)
             {
                 e.Graphics.FillEllipse(playerBulletBrush, b.x - 1, b.y - 1, b.size + 2, b.size + 2);
-
             }
 
             foreach (Obstacle o in levelObstacles)
             {
                 e.Graphics.FillRectangle(boxBrush, o.x, o.y, o.width, o.height);
-                e.Graphics.DrawString($"{o.hp}", testFont, playerBrush, o.x, o.y);
+                e.Graphics.DrawString($"{o.hp}", testFont, testBrush, o.x, o.y);
             }
 
         }

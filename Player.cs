@@ -13,6 +13,7 @@ namespace Bullet_Dungeon
         public int size = 20;
         int straightSpeed = 8;
         int diagSpeed = 6;
+        public bool invulnerable;
 
         public Player(int _x, int _y)
         {
