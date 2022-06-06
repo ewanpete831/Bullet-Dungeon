@@ -14,11 +14,14 @@ namespace Bullet_Dungeon
         public int size = 13;
         double xSpeed, ySpeed;
         double bulletSpeed = 11;
+        public int creator;
 
-        public Bullet(int _x, int _y, int targetX, int targetY)
+        public Bullet(int _x, int _y, int targetX, int targetY, int _creator)
         {
             x = _x;
             y = _y;
+
+            creator = _creator;
 
             double changeX = (targetX - x);
             double changeY = (targetY - y);
@@ -67,6 +70,18 @@ namespace Bullet_Dungeon
             Rectangle bulletRect = new Rectangle(x, y, size, size);
 
             if (bulletRect.IntersectsWith(obstacleRect))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool HitEnemy(Enemy r)
+        {
+            Rectangle enemyRect = new Rectangle(r.x, r.y, r.size, r.size);
+            Rectangle bulletRect = new Rectangle(x, y, size, size);
+
+            if (bulletRect.IntersectsWith(enemyRect))
             {
                 return true;
             }
