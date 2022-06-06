@@ -25,7 +25,7 @@ namespace Bullet_Dungeon
         public void Move(Player p, Size screenSize, List<Obstacle> obstacles)
         {
             double xDist = Math.Abs(x - p.x);
-            int yDist = Math.Abs(y - p.y);
+            double yDist = Math.Abs(y - p.y);
             Rectangle enemyRect = new Rectangle(x, y, size, size);
 
             int lastX = x;
@@ -54,27 +54,55 @@ namespace Bullet_Dungeon
                 }
             }
 
-            if (x < 0 || x > screenSize.Width - size)
-            {
-                x = lastX;
-                OtherMove();
-            }
-            if (y < 0 || y > screenSize.Height - size)
-            {
-                y = lastY;
-                OtherMove();
-            }
-
             foreach(Obstacle o in obstacles)
             {
+                Rectangle obstacleRect = new Rectangle(o.x, o.y, o.width, o.height);
+                if (enemyRect.IntersectsWith(obstacleRect))
+                {
+                    y = lastY;
+                    x = lastX;
 
+                    if (x > obstacleRect.Left - size && x < obstacleRect.Right)
+                    {
+                        if (y < obstacleRect.Bottom || y > obstacleRect.Top - size)
+                        {
+                            OtherMove(xDist, yDist, p);
+                        }
+                    }
+                    else if (y > obstacleRect.Top - size && y < obstacleRect.Bottom)
+                    {
+                        if (x < obstacleRect.Right || x > obstacleRect.Left - size)
+                        {
+                            OtherMove(xDist, yDist, p);
+                        }
+                    }
+                }
             }
-
-
         }
-        private void OtherMove()
+        private void OtherMove(double xDist, double yDist, Player p)
         {
-
+            if (xDist > yDist)
+            {
+                if (p.y < y)
+                {
+                    y -= speed;
+                }
+                else
+                {
+                    y += speed;
+                }
+            }
+            else
+            {
+                if (p.x < x)
+                {
+                    x -= speed;
+                }
+                else
+                {
+                    x += speed;
+                }
+            }
         }
     }
 }

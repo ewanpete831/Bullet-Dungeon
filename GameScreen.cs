@@ -63,7 +63,7 @@ namespace Bullet_Dungeon
             enemies.Add(new Enemy(100, 10, 3, "regular", 3));
             enemies.Add(new Enemy(200, 10, 3, "regular", 2));
             enemies.Add(new Enemy(100, 70, 3, "regular", 3));
-            enemies.Add(new Enemy(400, 300, 3, "regular", 2));
+            enemies.Add(new Enemy(450, 300, 3, "regular", 2));
         }
 
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -218,6 +218,19 @@ namespace Bullet_Dungeon
                         {
                             playerBullets.RemoveAt(i);
                         }
+                    }
+                }
+                for(int i = 0; i < enemyBullets.Count; i++)
+                {
+                    if(enemyBullets[i].HitObstacle(o))
+                    {
+                        int idRemoved = enemyBullets[i].creator;
+                        try
+                        {
+                            enemies[idRemoved - 1].bullets--;
+                        }
+                        catch { }
+                        enemyBullets.RemoveAt(i);
                     }
                 }
             }
