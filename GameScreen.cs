@@ -249,7 +249,7 @@ namespace Bullet_Dungeon
 
             for (int i = 0; i < enemies.Count; i++)
             {
-                if (enemies[i].bullets < 5 && enemies[i].lastShot > 10)
+                if (enemies[i].bullets < 5 && enemies[i].lastShot > 15)
                 {
                     enemyBullets.Add(new Bullet(enemies[i].x, enemies[i].y, p1.x, p1.y, i + 1));
                     enemies[i].bullets++;
