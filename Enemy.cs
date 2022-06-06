@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace Bullet_Dungeon
 {
     class Enemy
     {
-        public int x, y, hp, bullets, speed;
+        public int x, y, hp, bullets, speed, lastShot;
         public int size = 20;
         public string type;
 
@@ -21,10 +22,14 @@ namespace Bullet_Dungeon
             speed = _speed;
         }
 
-        public void Move(Player p)
+        public void Move(Player p, Size screenSize, List<Obstacle> obstacles)
         {
             double xDist = Math.Abs(x - p.x);
             int yDist = Math.Abs(y - p.y);
+            Rectangle enemyRect = new Rectangle(x, y, size, size);
+
+            int lastX = x;
+            int lastY = y;
 
             if (xDist > yDist)
             {
@@ -48,6 +53,28 @@ namespace Bullet_Dungeon
                     y += speed;
                 }
             }
+
+            if (x < 0 || x > screenSize.Width - size)
+            {
+                x = lastX;
+                OtherMove();
+            }
+            if (y < 0 || y > screenSize.Height - size)
+            {
+                y = lastY;
+                OtherMove();
+            }
+
+            foreach(Obstacle o in obstacles)
+            {
+
+            }
+
+
+        }
+        private void OtherMove()
+        {
+
         }
     }
 }
