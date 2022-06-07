@@ -46,7 +46,7 @@ namespace Bullet_Dungeon
             this.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.DoubleBuffered = true;
             this.Name = "GameScreen";
-            this.Size = new System.Drawing.Size(800, 600);
+            this.Size = new System.Drawing.Size(1300, 850);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.GameScreen_Paint);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.GameScreen_KeyUp);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.GameScreen_MouseDown);

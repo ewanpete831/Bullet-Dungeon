@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace Bullet_Dungeon
 {
@@ -20,6 +21,7 @@ namespace Bullet_Dungeon
         SolidBrush testBrush = new SolidBrush(Color.White);
         SolidBrush enemyBrush = new SolidBrush(Color.Yellow);
         SolidBrush enemyBulletBrush = new SolidBrush(Color.Orange);
+        SolidBrush wallBrush = new SolidBrush(Color.Gray);
         Pen testPen = new Pen(Color.White);
         Font testFont = new Font("Times New Roman", 12);
 
@@ -27,6 +29,7 @@ namespace Bullet_Dungeon
 
         int health;
 
+        int tempInvuln;
         int ammo;
         int shotInterval;
         bool reloading;
@@ -59,14 +62,25 @@ namespace Bullet_Dungeon
 
             levelObstacles.Add(new Obstacle(100, 250, 70, 20, 3, "box"));
             levelObstacles.Add(new Obstacle(400, 250, 10, 100, 3, "box"));
-            levelObstacles.Add(new Obstacle(10, 386, 60, 50, 3, "box"));
+            levelObstacles.Add(new Obstacle(150, 386, 60, 50, 3, "box"));
             levelObstacles.Add(new Obstacle(320, 300, 60, 80, 1, "wall"));
 
-            enemies.Add(new Enemy(10, 10, 3, "regular", 2));
-            enemies.Add(new Enemy(100, 10, 3, "regular", 3));
-            enemies.Add(new Enemy(200, 10, 3, "regular", 2));
-            enemies.Add(new Enemy(100, 70, 3, "regular", 3));
-            enemies.Add(new Enemy(450, 300, 3, "regular", 2));
+            levelObstacles.Add(new Obstacle(0, 0, Form1.screenWidth, 30, 1, "wall"));
+            levelObstacles.Add(new Obstacle(0, 0, 30, Form1.screenHeight, 1, "wall"));
+            levelObstacles.Add(new Obstacle(0, Form1.screenHeight - 30, Form1.screenWidth, 30, 1, "wall"));
+            levelObstacles.Add(new Obstacle(Form1.screenWidth - 30, 0, 30, Form1.screenHeight, 1, "wall"));
+
+
+            for (int i = 0; i < 5; i++)
+            {
+                AddEnemy("regular", i * 50, 150);
+            }
+
+            AddEnemy("shotgun", 100, 700);
+            AddEnemy("shotgun", 200, 700);
+            AddEnemy("shotgun", 300, 700);
+            AddEnemy("shotgun", 400, 700);
+
         }
 
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -155,9 +169,17 @@ namespace Bullet_Dungeon
             {
                 p1.invulnerable = false;
             }
-            foreach(Enemy r in enemies)
+            foreach (Enemy r in enemies)
             {
                 r.lastShot++;
+            }
+            if(tempInvuln > 0)
+            {
+                tempInvuln--;
+            }
+            if(tempInvuln == 1)
+            {
+                p1.invulnerable = false;
             }
             #endregion
 
@@ -175,7 +197,7 @@ namespace Bullet_Dungeon
             //move enemies
             foreach (Enemy r in enemies)
             {
-                r.Move(p1, this.Size, levelObstacles);
+                r.Move(p1, this.Size, levelObstacles, enemies);
             }
 
             //move bullets
@@ -186,31 +208,6 @@ namespace Bullet_Dungeon
             foreach (Bullet b in enemyBullets)
             {
                 b.Move();
-            }
-            #endregion
-
-            //bullets going off-screen
-            #region
-            for (int i = 0; i < playerBullets.Count; i++)
-            {
-                if (playerBullets[i].x < 0 || playerBullets[i].y < 0 || playerBullets[i].x > ClientSize.Width || playerBullets[i].y > ClientSize.Height)
-                {
-                    playerBullets.RemoveAt(i);
-                }
-            }
-            for (int i = 0; i < enemyBullets.Count; i++)
-            {
-                if (enemyBullets[i].x < 0 || enemyBullets[i].y < 0 || enemyBullets[i].x > ClientSize.Width || enemyBullets[i].y > ClientSize.Height)
-                {
-
-                    int idRemoved = enemyBullets[i].creator;
-                    try
-                    {
-                        enemies[idRemoved - 1].bullets--;
-                    }
-                    catch { }
-                    enemyBullets.RemoveAt(i);
-                }
             }
             #endregion
 
@@ -233,9 +230,9 @@ namespace Bullet_Dungeon
                         }
                     }
                 }
-                for(int i = 0; i < enemyBullets.Count; i++)
+                for (int i = 0; i < enemyBullets.Count; i++)
                 {
-                    if(enemyBullets[i].HitObstacle(o))
+                    if (enemyBullets[i].HitObstacle(o))
                     {
                         int idRemoved = enemyBullets[i].creator;
                         try
@@ -263,8 +260,9 @@ namespace Bullet_Dungeon
             {
                 if (enemyBullets[i].HitPlayer(p1))
                 {
-                    if (p1.invulnerable == false)
+                    if (p1.invulnerable == false && tempInvuln == 0)
                     {
+                        tempInvuln = 20;
                         int idRemoved = enemyBullets[i].creator;
                         health--;
                         try
@@ -299,18 +297,67 @@ namespace Bullet_Dungeon
             #endregion
 
             //enemies shooting
+            #region
             for (int i = 0; i < enemies.Count; i++)
             {
-                if (enemies[i].bullets < 5 && enemies[i].lastShot > 15)
+                if (enemies[i].type == "regular")
                 {
-                    enemyBullets.Add(new Bullet(enemies[i].x, enemies[i].y, p1.x, p1.y, i + 1));
-                    enemies[i].bullets++;
-                    enemies[i].lastShot = 0;
+                    if (enemies[i].bullets < 4 && enemies[i].lastShot > 15)
+                    {
+                        enemyBullets.Add(new Bullet(enemies[i].x, enemies[i].y, p1.x, p1.y, i + 1));
+                        enemies[i].bullets++;
+                        enemies[i].lastShot = 0;
+                    }
+                }
+                if(enemies[i].type == "shotgun")
+                {
+                    if(enemies[i].lastShot > 50)
+                    {
+                        double xDist = Math.Abs(enemies[i].x - p1.x);
+                        double yDist = Math.Abs(enemies[i].y - p1.y);
+
+                        if (xDist < yDist)
+                        {
+                            enemyBullets.Add(new Bullet(enemies[i].x, enemies[i].y, p1.x - 20, p1.y, i + 1));
+                            enemyBullets.Add(new Bullet(enemies[i].x, enemies[i].y, p1.x, p1.y, i + 1));
+                            enemyBullets.Add(new Bullet(enemies[i].x, enemies[i].y, p1.x + 20, p1.y, i + 1));
+                        }
+                        else
+                        {
+                            enemyBullets.Add(new Bullet(enemies[i].x, enemies[i].y, p1.x, p1.y - 20, i + 1));
+                            enemyBullets.Add(new Bullet(enemies[i].x, enemies[i].y, p1.x, p1.y, i + 1));
+                            enemyBullets.Add(new Bullet(enemies[i].x, enemies[i].y, p1.x, p1.y + 20, i + 1));
+                        }
+                        enemies[i].bullets += 3;
+                        enemies[i].lastShot = 0;
+                    }
                 }
             }
+            #endregion
+
+            if (enemies.Count < 1)
+            {
+                Thread.Sleep(1000);
+                Application.Exit();
+            }
+
+
             Refresh();
         }
 
+        private void AddEnemy(string type, int x, int y)
+        {
+            if (type == "regular")
+            {
+                enemies.Add(new Enemy(x, y, 4, "regular", 2));
+            }
+            if(type == "shotgun")
+            {
+                enemies.Add(new Enemy(x, y, 6, "shotgun", 3));
+            }
+
+
+        }
         private void Dodge()
         {
             lastLeft = leftPressed;
@@ -347,8 +394,7 @@ namespace Bullet_Dungeon
             e.Graphics.FillRectangle(playerBrush, p1.x, p1.y, p1.size, p1.size);
 
 
-            e.Graphics.DrawString($"{ammoText}", testFont, testBrush, 0, 0);
-            e.Graphics.DrawString($"{health}", testFont, testBrush, 0, 20);
+
 
             foreach (Bullet b in playerBullets)
             {
@@ -369,7 +415,7 @@ namespace Bullet_Dungeon
                 }
                 if (o.type == "wall")
                 {
-                    e.Graphics.FillRectangle(testBrush, o.x, o.y, o.width, o.height);
+                    e.Graphics.FillRectangle(wallBrush, o.x, o.y, o.width, o.height);
                 }
             }
 
@@ -378,6 +424,13 @@ namespace Bullet_Dungeon
                 e.Graphics.FillRectangle(enemyBrush, r.x, r.y, r.size, r.size);
                 e.Graphics.DrawString($"{r.hp}, {r.bullets}", testFont, playerBrush, r.x, r.y);
             }
+
+
+
+            e.Graphics.DrawString($"{ammoText}", testFont, testBrush, 0, 0);
+            e.Graphics.DrawString($"{health}", testFont, testBrush, 0, 20);
+
+            e.Graphics.DrawString($"{Form1.screenWidth}, {Form1.screenHeight}", testFont, testBrush, 0, 40);
 
         }
     }

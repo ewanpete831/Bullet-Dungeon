@@ -34,9 +34,9 @@ namespace Bullet_Dungeon
             // 
             // playButton
             // 
-            this.playButton.Location = new System.Drawing.Point(252, 141);
+            this.playButton.Location = new System.Drawing.Point(369, 275);
             this.playButton.Name = "playButton";
-            this.playButton.Size = new System.Drawing.Size(276, 92);
+            this.playButton.Size = new System.Drawing.Size(533, 218);
             this.playButton.TabIndex = 0;
             this.playButton.Text = "Play";
             this.playButton.UseVisualStyleBackColor = true;
@@ -47,9 +47,10 @@ namespace Bullet_Dungeon
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gray;
+            this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Controls.Add(this.playButton);
             this.Name = "MenuScreen";
-            this.Size = new System.Drawing.Size(800, 600);
+            this.Size = new System.Drawing.Size(1300, 850);
             this.ResumeLayout(false);
 
         }

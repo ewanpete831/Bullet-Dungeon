@@ -16,6 +16,7 @@ namespace Bullet_Dungeon
         {
             InitializeComponent();
             this.Size = Screen.FromControl(this).Bounds.Size;
+
         }
 
         private void playButton_Click(object sender, EventArgs e)

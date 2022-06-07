@@ -22,7 +22,7 @@ namespace Bullet_Dungeon
             speed = _speed;
         }
 
-        public void Move(Player p, Size screenSize, List<Obstacle> obstacles)
+        public void Move(Player p, Size screenSize, List<Obstacle> obstacles, List<Enemy> enemies)
         {
             double xDist = Math.Abs(x - p.x);
             double yDist = Math.Abs(y - p.y);
@@ -78,6 +78,8 @@ namespace Bullet_Dungeon
                     }
                 }
             }
+
+
         }
         private void OtherMove(double xDist, double yDist, Player p)
         {
