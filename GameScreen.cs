@@ -25,6 +25,8 @@ namespace Bullet_Dungeon
 
         string ammoText;
 
+        int health;
+
         int ammo;
         int shotInterval;
         bool reloading;
@@ -48,6 +50,7 @@ namespace Bullet_Dungeon
 
         private void OnStart()
         {
+            health = 3;
             p1.x = 100;
             p1.y = 400;
             p1.invulnerable = false;
@@ -158,6 +161,8 @@ namespace Bullet_Dungeon
             }
             #endregion
 
+            #region movement
+            //move player
             if (p1.invulnerable == false)
             {
                 p1.Move(upPressed, downPressed, leftPressed, rightPressed, this.Size, levelObstacles);
@@ -167,11 +172,13 @@ namespace Bullet_Dungeon
                 p1.Move(lastUp, lastDown, lastLeft, lastRight, this.Size, levelObstacles);
             }
 
+            //move enemies
             foreach (Enemy r in enemies)
             {
                 r.Move(p1, this.Size, levelObstacles);
             }
 
+            //move bullets
             foreach (Bullet b in playerBullets)
             {
                 b.Move();
@@ -180,7 +187,10 @@ namespace Bullet_Dungeon
             {
                 b.Move();
             }
+            #endregion
 
+            //bullets going off-screen
+            #region
             for (int i = 0; i < playerBullets.Count; i++)
             {
                 if (playerBullets[i].x < 0 || playerBullets[i].y < 0 || playerBullets[i].x > ClientSize.Width || playerBullets[i].y > ClientSize.Height)
@@ -202,7 +212,10 @@ namespace Bullet_Dungeon
                     enemyBullets.RemoveAt(i);
                 }
             }
+            #endregion
 
+            //bullets hitting obstacles
+            #region
             foreach (Obstacle o in levelObstacles)
             {
                 for (int i = 0; i < playerBullets.Count; i++)
@@ -235,6 +248,35 @@ namespace Bullet_Dungeon
                 }
             }
 
+            for (int i = 0; i < levelObstacles.Count; i++)
+            {
+                if (levelObstacles[i].hp < 1)
+                {
+                    levelObstacles.RemoveAt(i);
+                }
+            }
+            #endregion
+
+            //bullets hitting enemies / players
+            #region
+            for (int i = 0; i < enemyBullets.Count; i++)
+            {
+                if (enemyBullets[i].HitPlayer(p1))
+                {
+                    if (p1.invulnerable == false)
+                    {
+                        int idRemoved = enemyBullets[i].creator;
+                        health--;
+                        try
+                        {
+                            enemies[idRemoved - 1].bullets--;
+                        }
+                        catch { }
+                        enemyBullets.RemoveAt(i);
+                    }
+                }
+            }
+
             foreach (Enemy r in enemies)
             {
                 for (int i = 0; i < playerBullets.Count; i++)
@@ -249,6 +291,16 @@ namespace Bullet_Dungeon
 
             for (int i = 0; i < enemies.Count; i++)
             {
+                if (enemies[i].hp < 1)
+                {
+                    enemies.RemoveAt(i);
+                }
+            }
+            #endregion
+
+            //enemies shooting
+            for (int i = 0; i < enemies.Count; i++)
+            {
                 if (enemies[i].bullets < 5 && enemies[i].lastShot > 15)
                 {
                     enemyBullets.Add(new Bullet(enemies[i].x, enemies[i].y, p1.x, p1.y, i + 1));
@@ -256,24 +308,6 @@ namespace Bullet_Dungeon
                     enemies[i].lastShot = 0;
                 }
             }
-
-
-            for (int i = 0; i < levelObstacles.Count; i++)
-            {
-                if (levelObstacles[i].hp < 1)
-                {
-                    levelObstacles.RemoveAt(i);
-                }
-            }
-
-            for (int i = 0; i < enemies.Count; i++)
-            {
-                if (enemies[i].hp < 1)
-                {
-                    enemies.RemoveAt(i);
-                }
-            }
-
             Refresh();
         }
 
@@ -314,6 +348,7 @@ namespace Bullet_Dungeon
 
 
             e.Graphics.DrawString($"{ammoText}", testFont, testBrush, 0, 0);
+            e.Graphics.DrawString($"{health}", testFont, testBrush, 0, 20);
 
             foreach (Bullet b in playerBullets)
             {

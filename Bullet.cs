@@ -88,5 +88,16 @@ namespace Bullet_Dungeon
             return false;
         }
 
+        public bool HitPlayer(Player p)
+        {
+            Rectangle playerRect = new Rectangle(p.x, p.y, p.size, p.size);
+            Rectangle bulletRect = new Rectangle(x, y, size, size);
+
+            if (bulletRect.IntersectsWith(playerRect))
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
