@@ -17,11 +17,16 @@ namespace Bullet_Dungeon
 
         SolidBrush playerBrush = new SolidBrush(Color.Red);
         SolidBrush playerBulletBrush = new SolidBrush(Color.Purple);
+
         SolidBrush boxBrush = new SolidBrush(Color.Brown);
-        SolidBrush testBrush = new SolidBrush(Color.White);
-        SolidBrush enemyBrush = new SolidBrush(Color.Yellow);
-        SolidBrush enemyBulletBrush = new SolidBrush(Color.Orange);
         SolidBrush wallBrush = new SolidBrush(Color.Gray);
+        SolidBrush testBrush = new SolidBrush(Color.White);
+
+        SolidBrush regEnemyBrush = new SolidBrush(Color.Yellow);
+        SolidBrush shotgunBrush = new SolidBrush(Color.Goldenrod);
+        SolidBrush turretBrush = new SolidBrush(Color.DarkGoldenrod);
+        SolidBrush enemyBulletBrush = new SolidBrush(Color.Orange);
+
         Pen testPen = new Pen(Color.White);
         Font testFont = new Font("Times New Roman", 12);
 
@@ -80,6 +85,8 @@ namespace Bullet_Dungeon
             AddEnemy("shotgun", 200, 700);
             AddEnemy("shotgun", 300, 700);
             AddEnemy("shotgun", 400, 700);
+
+            AddEnemy("turret", 1300, 950);
 
         }
 
@@ -173,11 +180,11 @@ namespace Bullet_Dungeon
             {
                 r.lastShot++;
             }
-            if(tempInvuln > 0)
+            if (tempInvuln > 0)
             {
                 tempInvuln--;
             }
-            if(tempInvuln == 1)
+            if (tempInvuln == 1)
             {
                 p1.invulnerable = false;
             }
@@ -197,7 +204,10 @@ namespace Bullet_Dungeon
             //move enemies
             foreach (Enemy r in enemies)
             {
-                r.Move(p1, this.Size, levelObstacles, enemies);
+                if (r.type != "turret")
+                {
+                    r.Move(p1, this.Size, levelObstacles, enemies);
+                }
             }
 
             //move bullets
@@ -309,9 +319,9 @@ namespace Bullet_Dungeon
                         enemies[i].lastShot = 0;
                     }
                 }
-                if(enemies[i].type == "shotgun")
+                if (enemies[i].type == "shotgun")
                 {
-                    if(enemies[i].lastShot > 50)
+                    if (enemies[i].lastShot > 50)
                     {
                         double xDist = Math.Abs(enemies[i].x - p1.x);
                         double yDist = Math.Abs(enemies[i].y - p1.y);
@@ -332,6 +342,25 @@ namespace Bullet_Dungeon
                         enemies[i].lastShot = 0;
                     }
                 }
+                if(enemies[i].type == "turret")
+                {
+                    if (enemies[i].lastShot > 30)
+                    {
+                        int centreX = enemies[i].x + (enemies[i].size / 2);
+                        int centreY = enemies[i].y + (enemies[i].size / 2);
+
+                        enemyBullets.Add(new Bullet(enemies[i].x, enemies[i].y, centreX + 1, centreY - 2000, i + 1));
+                        enemyBullets.Add(new Bullet(enemies[i].x, enemies[i].y, centreX + 2000, centreY - 2000, i + 1));
+                        enemyBullets.Add(new Bullet(enemies[i].x, enemies[i].y, centreX + 2000, centreY + 1, i + 1));
+                        enemyBullets.Add(new Bullet(enemies[i].x, enemies[i].y, centreX + 2000, centreY + 2000, i + 1));
+                        enemyBullets.Add(new Bullet(enemies[i].x, enemies[i].y, centreX + 1, centreY + 2000, i + 1));
+                        enemyBullets.Add(new Bullet(enemies[i].x, enemies[i].y, centreX - 2000, centreY + 2000, i + 1));
+                        enemyBullets.Add(new Bullet(enemies[i].x, enemies[i].y, centreX - 2000, centreY + 1, i + 1));
+                        enemyBullets.Add(new Bullet(enemies[i].x, enemies[i].y, centreX - 2000, centreY - 2000, i + 1));
+                        enemies[i].bullets += 8;
+                        enemies[i].lastShot = 0;
+                    }
+                }
             }
             #endregion
 
@@ -347,16 +376,18 @@ namespace Bullet_Dungeon
 
         private void AddEnemy(string type, int x, int y)
         {
-            if (type == "regular")
+            switch(type)
             {
-                enemies.Add(new Enemy(x, y, 4, "regular", 2));
+                case "regular":
+                    enemies.Add(new Enemy(x, y, 4, "regular", 2));
+                    break;
+                case "shotgun":
+                    enemies.Add(new Enemy(x, y, 6, "shotgun", 3));
+                    break;
+                case "turret":
+                    enemies.Add(new Enemy(x, y, 10, "turret", 0));
+                    break;
             }
-            if(type == "shotgun")
-            {
-                enemies.Add(new Enemy(x, y, 6, "shotgun", 3));
-            }
-
-
         }
         private void Dodge()
         {
@@ -393,9 +424,6 @@ namespace Bullet_Dungeon
 
             e.Graphics.FillRectangle(playerBrush, p1.x, p1.y, p1.size, p1.size);
 
-
-
-
             foreach (Bullet b in playerBullets)
             {
                 e.Graphics.FillEllipse(playerBulletBrush, b.x - 1, b.y - 1, b.size + 2, b.size + 2);
@@ -421,11 +449,20 @@ namespace Bullet_Dungeon
 
             foreach (Enemy r in enemies)
             {
-                e.Graphics.FillRectangle(enemyBrush, r.x, r.y, r.size, r.size);
+                switch (r.type)
+                {
+                    case "regular":
+                        e.Graphics.FillRectangle(regEnemyBrush, r.x, r.y, r.size, r.size);
+                        break;
+                    case "shotgun":
+                        e.Graphics.FillRectangle(shotgunBrush, r.x, r.y, r.size, r.size);
+                        break;
+                    case "turret":
+                        e.Graphics.FillRectangle(turretBrush, r.x, r.y, r.size, r.size);
+                        break;
+                }
                 e.Graphics.DrawString($"{r.hp}, {r.bullets}", testFont, playerBrush, r.x, r.y);
             }
-
-
 
             e.Graphics.DrawString($"{ammoText}", testFont, testBrush, 0, 0);
             e.Graphics.DrawString($"{health}", testFont, testBrush, 0, 20);
