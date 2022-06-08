@@ -22,7 +22,7 @@ namespace Bullet_Dungeon
             speed = _speed;
         }
 
-        public void Move(Player p, Size screenSize, List<Obstacle> obstacles, List<Enemy> enemies)
+        public void Move(Player p, Size screenSize, List<Obstacle> obstacles)
         {
             double xDist = Math.Abs(x - p.x);
             double yDist = Math.Abs(y - p.y);
@@ -66,14 +66,14 @@ namespace Bullet_Dungeon
                     {
                         if (y < obstacleRect.Bottom || y > obstacleRect.Top - size)
                         {
-                            OtherMove(xDist, yDist, p);
+                            OtherMove(xDist, yDist, p, obstacleRect);
                         }
                     }
                     else if (y > obstacleRect.Top - size && y < obstacleRect.Bottom)
                     {
                         if (x < obstacleRect.Right || x > obstacleRect.Left - size)
                         {
-                            OtherMove(xDist, yDist, p);
+                            OtherMove(xDist, yDist, p, obstacleRect);
                         }
                     }
                 }
@@ -81,28 +81,64 @@ namespace Bullet_Dungeon
 
 
         }
-        private void OtherMove(double xDist, double yDist, Player p)
+        private void OtherMove(double xDist, double yDist, Player p, Rectangle oRect)
         {
             if (xDist > yDist)
             {
                 if (p.y < y)
                 {
-                    y -= speed;
+                    int nextY = y - speed;
+                    Rectangle nextPos = new Rectangle(x, nextY, size, size);
+                    if(nextPos.IntersectsWith(oRect))
+                    {
+                        y += speed;
+                    }
+                    else
+                    {
+                        y -= speed;
+                    }
                 }
                 else
                 {
-                    y += speed;
+                    int nextY = y + speed;
+                    Rectangle nextPos = new Rectangle(x, nextY, size, size);
+                    if (nextPos.IntersectsWith(oRect))
+                    {
+                        y -= speed;
+                    }
+                    else
+                    {
+                        y += speed;
+                    }
                 }
             }
             else
             {
                 if (p.x < x)
                 {
-                    x -= speed;
+                    int nextX = x - speed;
+                    Rectangle nextPos = new Rectangle(x, nextX, size, size);
+                    if (nextPos.IntersectsWith(oRect))
+                    {
+                       x += speed;
+                    }
+                    else
+                    {
+                        x -= speed;
+                    }
                 }
                 else
                 {
-                    x += speed;
+                    int nextX = x + speed;
+                    Rectangle nextPos = new Rectangle(x, nextX, size, size);
+                    if (nextPos.IntersectsWith(oRect))
+                    {
+                        x -= speed;
+                    }
+                    else
+                    {
+                        x += speed;
+                    }
                 }
             }
         }
