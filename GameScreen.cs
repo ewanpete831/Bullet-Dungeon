@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
+using System.Xml;
 
 namespace Bullet_Dungeon
 {
@@ -33,6 +34,7 @@ namespace Bullet_Dungeon
         string ammoText;
 
         int health;
+        int level;
 
         int tempInvuln;
         int ammo;
@@ -59,47 +61,19 @@ namespace Bullet_Dungeon
         private void OnStart()
         {
             health = 3;
+            level = 2;
            
             p1.invulnerable = false;
 
             ammo = 10;
 
+            
+
 
             p1.x = 100;
             p1.y = Form1.screenHeight - 100;
 
-            levelObstacles.Add(new Obstacle(475, 425, 1000, 200, 1, "wall"));
-
-            levelObstacles.Add(new Obstacle(200, 475, 100, 100, 4, "box"));
-            levelObstacles.Add(new Obstacle(1620, 475, 100, 100, 4, "box"));
-            levelObstacles.Add(new Obstacle(660, 200, 100, 100, 4, "box"));
-            levelObstacles.Add(new Obstacle(1160, 200, 100, 100, 4, "box"));
-            levelObstacles.Add(new Obstacle(660, 780, 100, 100, 4, "box"));
-            levelObstacles.Add(new Obstacle(1160, 780, 100, 100, 4, "box"));
-
-            levelObstacles.Add(new Obstacle(0, 0, Form1.screenWidth, 30, 1, "wall"));
-            levelObstacles.Add(new Obstacle(0, 0, 30, Form1.screenHeight, 1, "wall"));
-            levelObstacles.Add(new Obstacle(0, Form1.screenHeight - 30, Form1.screenWidth, 30, 1, "wall"));
-            levelObstacles.Add(new Obstacle(Form1.screenWidth - 30, 0, 30, Form1.screenHeight, 1, "wall"));
-
-
-            AddEnemy("regular", 150, 100);
-            AddEnemy("regular", 250, 100);
-            AddEnemy("regular", 125, 150);
-            AddEnemy("regular", 200, 150);
-            AddEnemy("regular", 300, 150);
-
-            AddEnemy("regular", 950, 950);
-            AddEnemy("regular", 1000, 225);
-            AddEnemy("shotgun", 950, 700);
-            AddEnemy("shotgun", 900, 150);
-            AddEnemy("shotgun", 900, 300);
-
-            AddEnemy("turret", 1700, 175);
-            AddEnemy("turret", 1700, 905);
-
-            AddEnemy("shotgun", 1700, 275);
-            AddEnemy("shotgun", 1700, 805);
+            LoadLevel(level);
         }
 
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
@@ -417,6 +391,69 @@ namespace Bullet_Dungeon
             reloadTimer = 50;
         }
 
+        private void LoadLevel(int level)
+        {
+            XmlReader reader = XmlReader.Create($"Level{level}.xml");
+
+            levelObstacles.Clear();
+            //walls
+            levelObstacles.Add(new Obstacle(0, 0, Form1.screenWidth, 30, 1, "wall"));
+            levelObstacles.Add(new Obstacle(0, 0, 30, Form1.screenHeight, 1, "wall"));
+            levelObstacles.Add(new Obstacle(0, Form1.screenHeight - 30, Form1.screenWidth, 30, 1, "wall"));
+            levelObstacles.Add(new Obstacle(Form1.screenWidth - 30, 0, 30, Form1.screenHeight, 1, "wall"));
+
+            enemies.Clear();
+            string x, y, width, height, hp, type;
+
+            while (reader.Read())
+            {
+                reader.ReadToFollowing("x");
+                x = reader.ReadString();
+
+                reader.ReadToFollowing("y");
+                y = reader.ReadString();
+
+                reader.ReadToFollowing("width");
+                width = reader.ReadString();
+
+                reader.ReadToFollowing("height");
+                height = reader.ReadString();
+
+                reader.ReadToFollowing("hp");
+                hp = reader.ReadString();
+
+                reader.ReadToFollowing("type");
+                type = reader.ReadString();
+
+                if (x != "")
+                {
+                    levelObstacles.Add(new Obstacle(Convert.ToInt32(x), Convert.ToInt32(y), Convert.ToInt32(width),
+                        Convert.ToInt32(height), Convert.ToInt32(hp), type));
+                }
+            }
+            reader.Close();
+
+            XmlReader enemyReader = XmlReader.Create($"Level{level}.xml");
+            string enemyType, enemyX, enemyY;
+
+            while (enemyReader.Read())
+            {
+                enemyReader.ReadToFollowing("enemyType");
+                enemyType = enemyReader.ReadString();
+
+                enemyReader.ReadToFollowing("enemyX");
+                enemyX = enemyReader.ReadString();
+
+                enemyReader.ReadToFollowing("enemyY");
+                enemyY = enemyReader.ReadString();
+
+                if (enemyType != "")
+                {
+                    AddEnemy(enemyType, Convert.ToInt32(enemyX), Convert.ToInt32(enemyY));
+                }
+            }
+            enemyReader.Close();
+        }
 
         private void GameScreen_Paint(object sender, PaintEventArgs e)
         {

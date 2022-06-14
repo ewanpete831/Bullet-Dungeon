@@ -117,7 +117,7 @@ namespace Bullet_Dungeon
                 if (p.x < x)
                 {
                     int nextX = x - speed;
-                    Rectangle nextPos = new Rectangle(x, nextX, size, size);
+                    Rectangle nextPos = new Rectangle(nextX, y, size, size);
                     if (nextPos.IntersectsWith(oRect))
                     {
                        x += speed;
@@ -130,7 +130,7 @@ namespace Bullet_Dungeon
                 else
                 {
                     int nextX = x + speed;
-                    Rectangle nextPos = new Rectangle(x, nextX, size, size);
+                    Rectangle nextPos = new Rectangle(nextX, y, size, size);
                     if (nextPos.IntersectsWith(oRect))
                     {
                         x -= speed;
