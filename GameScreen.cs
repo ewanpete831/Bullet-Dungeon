@@ -30,12 +30,14 @@ namespace Bullet_Dungeon
 
         Pen testPen = new Pen(Color.White);
         Font testFont = new Font("Times New Roman", 12);
-
-        string ammoText;
+        Font ammoFont = new Font("Comic Sans MS", 24);
 
         int health;
         int level;
 
+        int fadeTimer;
+        bool fade;
+        int maxAmmo;
         int tempInvuln;
         int ammo;
         int shotInterval;
@@ -61,14 +63,13 @@ namespace Bullet_Dungeon
         private void OnStart()
         {
             health = 3;
-            level = 2;
-           
+            level = 1;
+            fade = false;
+
             p1.invulnerable = false;
 
             ammo = 10;
-
-            
-
+            maxAmmo = 10;
 
             p1.x = 100;
             p1.y = Form1.screenHeight - 100;
@@ -78,7 +79,6 @@ namespace Bullet_Dungeon
 
         private void GameScreen_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
         {
-
             switch (e.KeyCode)
             {
                 case Keys.W:
@@ -173,6 +173,10 @@ namespace Bullet_Dungeon
             if (tempInvuln == 1)
             {
                 p1.invulnerable = false;
+            }
+            if(fadeTimer > 0)
+            {
+                fadeTimer -= 10;
             }
             #endregion
 
@@ -328,7 +332,7 @@ namespace Bullet_Dungeon
                         enemies[i].lastShot = 0;
                     }
                 }
-                if(enemies[i].type == "turret")
+                if (enemies[i].type == "turret")
                 {
                     if (enemies[i].lastShot > 30)
                     {
@@ -350,19 +354,22 @@ namespace Bullet_Dungeon
             }
             #endregion
 
-            //if (enemies.Count < 1)
-            //{
-            //    Thread.Sleep(1000);
-            //    Application.Exit();
-            //}
-
+            if (enemies.Count < 1)
+            {
+                level++;
+                LoadLevel(level);
+                enemyBullets.Clear();
+                playerBullets.Clear();
+                p1.x = 100;
+                p1.y = Form1.screenHeight - 100;
+            }
 
             Refresh();
         }
 
         private void AddEnemy(string type, int x, int y)
         {
-            switch(type)
+            switch (type)
             {
                 case "regular":
                     enemies.Add(new Enemy(x, y, 4, "regular", 2));
@@ -386,9 +393,11 @@ namespace Bullet_Dungeon
         }
         private void Reload()
         {
-            reloading = true;
-            ammoText = "Reloading";
-            reloadTimer = 50;
+            if (ammo < maxAmmo)
+            {
+                reloading = true;
+                reloadTimer = 50;
+            }
         }
 
         private void LoadLevel(int level)
@@ -457,11 +466,6 @@ namespace Bullet_Dungeon
 
         private void GameScreen_Paint(object sender, PaintEventArgs e)
         {
-            if (reloading == false)
-            {
-                ammoText = ammo.ToString();
-            }
-
             if (p1.invulnerable == true)
             {
                 playerBrush.Color = Color.White;
@@ -513,11 +517,22 @@ namespace Bullet_Dungeon
                 e.Graphics.DrawString($"{r.hp}, {r.bullets}", testFont, playerBrush, r.x, r.y);
             }
 
-            e.Graphics.DrawString($"{ammoText}", testFont, testBrush, 0, 0);
-            e.Graphics.DrawString($"{health}", testFont, testBrush, 0, 20);
 
-            e.Graphics.DrawString($"{Form1.screenWidth}, {Form1.screenHeight}", testFont, testBrush, 0, 40);
-
+            for (int i = 0; i < health; i++)
+            {
+                e.Graphics.FillRectangle(playerBrush, (35 * i) + 5, 5, 30, 30);
+            }
+            if (reloading)
+            {
+                e.Graphics.DrawString("Reloading", ammoFont, testBrush, Form1.screenWidth - 155, Form1.screenHeight - 50);
+            }
+            else
+            {
+                for (int i = 0; i < ammo; i++)
+                {
+                    e.Graphics.FillRectangle(testBrush, Form1.screenWidth - 50, Form1.screenHeight - (25 * (i + 1)), 40, 20);
+                }
+            }
         }
     }
 }

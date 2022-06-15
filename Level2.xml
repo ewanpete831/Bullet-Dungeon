@@ -170,6 +170,7 @@
 		<hp>4</hp>
 		<type>box</type>
 	</obstacle>
+	enemies
 	<enemy>
 		<enemyType>shotgun</enemyType>
 		<enemyX>780</enemyX>
@@ -199,5 +200,25 @@
 		<enemyType>turret</enemyType>
 		<enemyX>1405</enemyX>
 		<enemyY>480</enemyY>
+	</enemy>
+	<enemy>
+		<enemyType>regular</enemyType>
+		<enemyX>70</enemyX>
+		<enemyY>70</enemyY>
+	</enemy>
+	<enemy>
+		<enemyType>regular</enemyType>
+		<enemyX>1850</enemyX>
+		<enemyY>70</enemyY>
+	</enemy>
+	<enemy>
+		<enemyType>regular</enemyType>
+		<enemyX>700</enemyX>
+		<enemyY>70</enemyY>
+	</enemy>
+	<enemy>
+		<enemyType>regular</enemyType>
+		<enemyX>1300</enemyX>
+		<enemyY>70</enemyY>
 	</enemy>
 </obstacles>
