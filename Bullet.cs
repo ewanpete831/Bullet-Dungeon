@@ -78,14 +78,35 @@ namespace Bullet_Dungeon
 
         public bool HitEnemy(Enemy r)
         {
-            Rectangle enemyRect = new Rectangle(r.x, r.y, r.size, r.size);
             Rectangle bulletRect = new Rectangle(x, y, size, size);
-
-            if (bulletRect.IntersectsWith(enemyRect))
+            if (r.type != "Boss")
             {
-                return true;
+                Rectangle enemyRect = new Rectangle(r.x, r.y, r.size, r.size); 
+
+                if (bulletRect.IntersectsWith(enemyRect))
+                {
+                    return true;
+                }
+                return false;
             }
-            return false;
+            else
+            {
+                List<Rectangle> bossHitbox = new List<Rectangle>();
+                bossHitbox.Add(new Rectangle(r.x, r.y + 240, 64, 120));
+                bossHitbox.Add(new Rectangle(r.x + 64, r.y + 120, 64, 240));
+                bossHitbox.Add(new Rectangle(r.x + 128, r.y, 64, 320));
+                bossHitbox.Add(new Rectangle(r.x + 192, r.y + 120, 64, 240));
+                bossHitbox.Add(new Rectangle(r.x + 256, r.y + 240, 64, 120));
+                
+                foreach(Rectangle h in bossHitbox)
+                {
+                    if (bulletRect.IntersectsWith(h))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }    
         }
 
         public bool HitPlayer(Player p)
