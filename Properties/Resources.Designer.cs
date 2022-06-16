@@ -139,12 +139,51 @@ namespace Bullet_Dungeon.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt; 
-        ///.
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+        ///&lt;obstacles&gt;
+        ///	middle walls
+        ///	&lt;obstacle&gt;
+        ///		&lt;x&gt;475&lt;/x&gt;
+        ///		&lt;y&gt;475&lt;/y&gt;
+        ///		&lt;width&gt;1000&lt;/width&gt;
+        ///		&lt;height&gt;100&lt;/height&gt;
+        ///		&lt;hp&gt;1&lt;/hp&gt;
+        ///		&lt;type&gt;wall&lt;/type&gt;
+        ///	&lt;/obstacle&gt;
+        ///	&lt;obstacle&gt;
+        ///		&lt;x&gt;475&lt;/x&gt;
+        ///		&lt;y&gt;775&lt;/y&gt;
+        ///		&lt;width&gt;1000&lt;/width&gt;
+        ///		&lt;height&gt;100&lt;/height&gt;
+        ///		&lt;hp&gt;1&lt;/hp&gt;
+        ///		&lt;type&gt;wall&lt;/type&gt;
+        ///	&lt;/obstacle&gt;
+        ///	&lt;obstacle&gt;
+        ///		&lt;x&gt;475&lt;/x&gt;
+        ///		&lt;y&gt;175&lt;/y&gt;
+        ///		&lt;width&gt;1000&lt;/width&gt;
+        ///		&lt;height&gt;100&lt;/height&gt;
+        ///		&lt;hp&gt;1&lt;/hp&gt;
+        ///		&lt;type&gt;wall&lt;/type&gt;
+        ///	&lt;/obstacle&gt;
+        ///	
+        ///	boxes
+        ///	&lt;obstacle&gt;
+        ///		&lt;x&gt;180 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string Level3 {
             get {
                 return ResourceManager.GetString("Level3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt; 
+        ///.
+        /// </summary>
+        internal static string Level4 {
+            get {
+                return ResourceManager.GetString("Level4", resourceCulture);
             }
         }
     }

@@ -27,16 +27,25 @@ namespace Bullet_Dungeon
         SolidBrush shotgunBrush = new SolidBrush(Color.Goldenrod);
         SolidBrush turretBrush = new SolidBrush(Color.DarkGoldenrod);
         SolidBrush enemyBulletBrush = new SolidBrush(Color.Orange);
+        SolidBrush bossBrush = new SolidBrush(Color.Aquamarine);
 
         Pen testPen = new Pen(Color.White);
         Font testFont = new Font("Times New Roman", 12);
         Font ammoFont = new Font("Comic Sans MS", 24);
 
+        Random bossRandom = new Random();
+
         int health;
         int level;
 
+        int bossSpeed;
+        bool bossRight;
+        bool bossShooting;
+        int bossPhase;
+        int lastBossAtk;
+        int bossShootCount;
+
         int fadeTimer;
-        bool fade;
         int maxAmmo;
         int tempInvuln;
         int ammo;
@@ -62,11 +71,13 @@ namespace Bullet_Dungeon
 
         private void OnStart()
         {
-            health = 3;
-            level = 1;
-            fade = false;
+            health = 4;
+            level = 4;
 
             p1.invulnerable = false;
+            bossRight = false;
+            bossSpeed = 2;
+            bossPhase = 1;
 
             ammo = 10;
             maxAmmo = 10;
@@ -174,7 +185,7 @@ namespace Bullet_Dungeon
             {
                 p1.invulnerable = false;
             }
-            if(fadeTimer > 0)
+            if (fadeTimer > 0)
             {
                 fadeTimer -= 10;
             }
@@ -194,7 +205,26 @@ namespace Bullet_Dungeon
             //move enemies
             foreach (Enemy r in enemies)
             {
-                if (r.type != "turret")
+                if (r.type == "Boss")
+                {
+                    if (!bossRight)
+                    {
+                        r.x -= bossSpeed;
+                        if (r.x < 100)
+                        {
+                            bossRight = true;
+                        }
+                    }
+                    else
+                    {
+                        r.x += bossSpeed;
+                        if (r.x > 1500)
+                        {
+                            bossRight = false;
+                        }
+                    }
+                }
+                else if (r.type != "turret")
                 {
                     r.Move(p1, this.Size, levelObstacles);
                 }
@@ -351,6 +381,69 @@ namespace Bullet_Dungeon
                         enemies[i].lastShot = 0;
                     }
                 }
+                if (enemies[i].type == "Boss")
+                {
+                    switch (bossPhase)
+                    {
+                        case 1:
+                            if (enemies[i].lastShot > 100 && !bossShooting)
+                            {
+                                //int attack = bossRandom.Next(1, 4);
+                                int attack = 2;
+                                switch (attack)
+                                {
+                                    case 1:
+                                        AddEnemy("regular", enemies[i].x + 10, enemies[i].y + enemies[i].size + 20);
+                                        AddEnemy("regular", enemies[i].x + enemies[i].size - 10, enemies[i].y + enemies[i].size + 20);
+                                        break;
+                                    case 2:
+                                        enemyBullets.Add(new Bullet(enemies[i].x, enemies[i].y + enemies[i].size, p1.x, p1.y, i + 1));
+                                        enemyBullets.Add(new Bullet(enemies[i].x + (enemies[i].size / 2), enemies[i].y + enemies[i].size, p1.x, p1.y, i + 1));
+                                        enemyBullets.Add(new Bullet(enemies[i].x + enemies[i].size, enemies[i].y + enemies[i].size, p1.x, p1.y, i + 1));
+                                        enemies[i].bullets += 3;
+                                        bossShooting = true;
+                                        lastBossAtk = 2;
+                                        bossShootCount = 9;
+                                        break;
+                                    case 3:
+                                        for(int j = 0; j < 19; j++)
+                                        {
+
+                                        }
+                                        break;
+                                }
+                                enemies[i].lastShot = 0;
+                            }
+                            else if (bossShooting)
+                            {
+                                switch (lastBossAtk)
+                                {
+                                    case 2:
+                                        if (enemies[i].lastShot > 10 && bossShootCount > 0)
+                                        {
+                                            enemyBullets.Add(new Bullet(enemies[i].x, enemies[i].y + enemies[i].size, p1.x, p1.y, i + 1));
+                                            enemyBullets.Add(new Bullet(enemies[i].x + (enemies[i].size / 2), enemies[i].y + enemies[i].size, p1.x, p1.y, i + 1));
+                                            enemyBullets.Add(new Bullet(enemies[i].x + enemies[i].size, enemies[i].y + enemies[i].size, p1.x, p1.y, i + 1));
+                                            enemies[i].bullets += 3;
+                                            enemies[i].lastShot = 0;
+                                            bossShootCount--;
+                                        }
+                                        else if (bossShootCount == 0)
+                                        {
+                                            bossShooting = false;
+                                        }
+                                        break;
+                                }
+                            }
+                            break;
+                        case 2:
+
+                            break;
+                        case 3:
+
+                            break;
+                    }
+                }
             }
             #endregion
 
@@ -379,6 +472,10 @@ namespace Bullet_Dungeon
                     break;
                 case "turret":
                     enemies.Add(new Enemy(x, y, 10, "turret", 0));
+                    break;
+                case "Boss":
+                    enemies.Add(new Enemy(x, y, 200, "Boss", 2));
+                    enemies[enemies.Count - 1].size = 320;
                     break;
             }
         }
@@ -512,6 +609,9 @@ namespace Bullet_Dungeon
                         break;
                     case "turret":
                         e.Graphics.FillRectangle(turretBrush, r.x, r.y, r.size, r.size);
+                        break;
+                    case "Boss":
+                        e.Graphics.FillRectangle(bossBrush, r.x, r.y, r.size, r.size);
                         break;
                 }
                 e.Graphics.DrawString($"{r.hp}, {r.bullets}", testFont, playerBrush, r.x, r.y);

@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<obstacles>
+	<obstacle>
+		<x>150</x>
+		<y>800</y>
+		<width>125</width>
+		<height>125</height>
+		<hp>1</hp>
+		<type>wall</type>
+	</obstacle>
+	<obstacle>
+		<x>1645</x>
+		<y>800</y>
+		<width>125</width>
+		<height>125</height>
+		<hp>1</hp>
+		<type>wall</type>
+	</obstacle>
+	<enemy>
+		<enemyType>Boss</enemyType>
+		<enemyX>800</enemyX>
+		<enemyY>100</enemyY>
+	</enemy>
+</obstacles>
