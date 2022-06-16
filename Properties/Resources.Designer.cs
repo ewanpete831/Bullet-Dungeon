@@ -178,12 +178,64 @@ namespace Bullet_Dungeon.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt; 
-        ///.
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+        ///&lt;obstacles&gt;
+        ///	&lt;obstacle&gt;
+        ///		&lt;x&gt;150&lt;/x&gt;
+        ///		&lt;y&gt;800&lt;/y&gt;
+        ///		&lt;width&gt;125&lt;/width&gt;
+        ///		&lt;height&gt;125&lt;/height&gt;
+        ///		&lt;hp&gt;1&lt;/hp&gt;
+        ///		&lt;type&gt;wall&lt;/type&gt;
+        ///	&lt;/obstacle&gt;
+        ///	&lt;obstacle&gt;
+        ///		&lt;x&gt;1645&lt;/x&gt;
+        ///		&lt;y&gt;800&lt;/y&gt;
+        ///		&lt;width&gt;125&lt;/width&gt;
+        ///		&lt;height&gt;125&lt;/height&gt;
+        ///		&lt;hp&gt;1&lt;/hp&gt;
+        ///		&lt;type&gt;wall&lt;/type&gt;
+        ///	&lt;/obstacle&gt;
+        ///	&lt;enemy&gt;
+        ///		&lt;enemyType&gt;Boss&lt;/enemyType&gt;
+        ///		&lt;enemyX&gt;800&lt;/enemyX&gt;
+        ///		&lt;enemyY&gt;100&lt;/enemyY&gt;
+        ///	&lt;/enemy&gt;
+        ///&lt;/obstacles&gt;.
         /// </summary>
         internal static string Level4 {
             get {
                 return ResourceManager.GetString("Level4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Steel1 {
+            get {
+                object obj = ResourceManager.GetObject("Steel1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Steel2 {
+            get {
+                object obj = ResourceManager.GetObject("Steel2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Steel3 {
+            get {
+                object obj = ResourceManager.GetObject("Steel3", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

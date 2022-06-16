@@ -34,6 +34,9 @@ namespace Bullet_Dungeon
         Font ammoFont = new Font("Comic Sans MS", 24);
 
         Random bossRandom = new Random();
+        Image[] steel = new Image[3];
+        
+
 
         int health;
         int level;
@@ -53,6 +56,8 @@ namespace Bullet_Dungeon
         bool reloading;
         int reloadTimer;
         int dodgeTimer;
+        int sprite = 1;
+        int spriteSwitch;
 
         bool upPressed, downPressed, rightPressed, leftPressed;
         bool lastUp, lastDown, lastRight, lastLeft;
@@ -66,6 +71,9 @@ namespace Bullet_Dungeon
         {
             InitializeComponent();
             this.Size = Screen.FromControl(this).Bounds.Size;
+            steel[0] = Properties.Resources.Steel1;
+            steel[1] = Properties.Resources.Steel2;
+            steel[2] = Properties.Resources.Steel3;
             OnStart();
         }
 
@@ -78,6 +86,8 @@ namespace Bullet_Dungeon
             bossRight = false;
             bossSpeed = 2;
             bossPhase = 1;
+
+            spriteSwitch = 0;
 
             ammo = 10;
             maxAmmo = 10;
@@ -188,6 +198,19 @@ namespace Bullet_Dungeon
             if (fadeTimer > 0)
             {
                 fadeTimer -= 10;
+            }
+            spriteSwitch++;
+            if(spriteSwitch > 4)
+            {
+                spriteSwitch = 0;
+                if(sprite == 2)
+                {
+                    sprite = 0;
+                }
+                else
+                {
+                    sprite++;
+                }
             }
             #endregion
 
@@ -383,18 +406,25 @@ namespace Bullet_Dungeon
                 }
                 if (enemies[i].type == "Boss")
                 {
+                   if(enemies[i].hp < 50)
+                    {
+                        bossPhase = 3;
+                    }
+                   else if(enemies[i].hp < 125)
+                    {
+                        bossPhase = 2;
+                    }
                     switch (bossPhase)
                     {
                         case 1:
                             if (enemies[i].lastShot > 100 && !bossShooting)
                             {
-                                //int attack = bossRandom.Next(1, 4);
-                                int attack = 2;
+                                int attack = bossRandom.Next(1, 4);
                                 switch (attack)
                                 {
                                     case 1:
-                                        AddEnemy("regular", enemies[i].x + 10, enemies[i].y + enemies[i].size + 20);
-                                        AddEnemy("regular", enemies[i].x + enemies[i].size - 10, enemies[i].y + enemies[i].size + 20);
+                                        AddEnemy("weak", enemies[i].x + 10, enemies[i].y + enemies[i].size + 20);
+                                        AddEnemy("weak", enemies[i].x + enemies[i].size - 10, enemies[i].y + enemies[i].size + 20);
                                         break;
                                     case 2:
                                         enemyBullets.Add(new Bullet(enemies[i].x, enemies[i].y + enemies[i].size, p1.x, p1.y, i + 1));
@@ -408,8 +438,12 @@ namespace Bullet_Dungeon
                                     case 3:
                                         for(int j = 0; j < 19; j++)
                                         {
-
+                                            enemyBullets.Add(new Bullet(j * 100, 35, (j * 100) + 1, 450, i + 1));
+                                            enemies[i].bullets++;
                                         }
+                                        bossShooting = true;
+                                        lastBossAtk = 3;
+                                        bossShootCount = 12;
                                         break;
                                 }
                                 enemies[i].lastShot = 0;
@@ -433,6 +467,22 @@ namespace Bullet_Dungeon
                                             bossShooting = false;
                                         }
                                         break;
+                                    case 3:
+                                        if (enemies[i].lastShot > 3 && bossShootCount > 0)
+                                        {
+                                            for (int j = 0; j < 19; j++)
+                                            {
+                                                enemyBullets.Add(new Bullet(j * 100, 35, (j * 100) + 1, 450, i + 1));
+                                                enemies[i].bullets++;
+                                            }
+                                            enemies[i].lastShot = 0;
+                                            bossShootCount--;
+                                        }
+                                        else if (bossShootCount == 0)
+                                        {
+                                            bossShooting = false;
+                                        }
+                                        break;
                                 }
                             }
                             break;
@@ -446,6 +496,8 @@ namespace Bullet_Dungeon
                 }
             }
             #endregion
+
+            
 
             if (enemies.Count < 1)
             {
@@ -476,6 +528,9 @@ namespace Bullet_Dungeon
                 case "Boss":
                     enemies.Add(new Enemy(x, y, 200, "Boss", 2));
                     enemies[enemies.Count - 1].size = 320;
+                    break;
+                case "weak":
+                    enemies.Add(new Enemy(x, y, 2, "regular", 2));
                     break;
             }
         }
@@ -611,7 +666,7 @@ namespace Bullet_Dungeon
                         e.Graphics.FillRectangle(turretBrush, r.x, r.y, r.size, r.size);
                         break;
                     case "Boss":
-                        e.Graphics.FillRectangle(bossBrush, r.x, r.y, r.size, r.size);
+                        e.Graphics.DrawImage(steel[sprite], r.x, r.y, 320, 320);
                         break;
                 }
                 e.Graphics.DrawString($"{r.hp}, {r.bullets}", testFont, playerBrush, r.x, r.y);

@@ -124,6 +124,12 @@
     <Content Include="Level4.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\CroppedSteel3.png" />
+    <None Include="Resources\CroppedSteel2.png" />
+    <None Include="Resources\CroppedSteel1.png" />
+    <None Include="Resources\Steel2.png" />
+    <None Include="Resources\Steel3.png" />
+    <None Include="Resources\Steel1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
