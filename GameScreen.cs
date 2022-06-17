@@ -36,8 +36,6 @@ namespace Bullet_Dungeon
         Random bossRandom = new Random();
         Image[] steel = new Image[3];
 
-
-
         int health;
         int level;
 
@@ -80,7 +78,7 @@ namespace Bullet_Dungeon
         private void OnStart()
         {
             health = 4;
-            level = 4;
+            level = 1;
 
             p1.invulnerable = false;
             bossRight = false;
@@ -119,7 +117,6 @@ namespace Bullet_Dungeon
                     break;
             }
         }
-
         private void GameScreen_KeyUp(object sender, KeyEventArgs e)
         {
             switch (e.KeyCode)
@@ -411,8 +408,6 @@ namespace Bullet_Dungeon
             }
             #endregion
 
-
-
             if (enemies.Count < 1)
             {
                 level++;
@@ -422,8 +417,21 @@ namespace Bullet_Dungeon
                 p1.x = 100;
                 p1.y = Form1.screenHeight - 100;
             }
+            if(health < 1)
+            {
+                GameEnd(false);
+            }
 
             Refresh();
+        }
+
+        private void GameEnd(bool win)
+        {
+            enemyBullets.Clear();
+            playerBullets.Clear();
+
+            gameTimer.Enabled = false;
+            Form1.ChangeScreen(this, new EndScreen());
         }
 
         private void BossMove(Enemy b)
@@ -431,10 +439,12 @@ namespace Bullet_Dungeon
             if (b.hp < 50)
             {
                 bossPhase = 3;
+                bossSpeed = 7;
             }
             else if (b.hp < 125)
             {
                 bossPhase = 2;
+                bossSpeed = 4;
             }
 
             switch (bossPhase)
@@ -510,12 +520,186 @@ namespace Bullet_Dungeon
                     }
                     break;
                 case 2:
-
+                    if (b.lastShot > 80 && !bossShooting)
+                    {
+                        int attack = bossRandom.Next(1, 4);
+                        switch (attack)
+                        {
+                            case 1:
+                                AddEnemy("weakSg", b.x + 10, b.y + b.size + 20);
+                                AddEnemy("weakSg", b.x + b.size - 10, b.y + b.size + 20);
+                                break;
+                            case 2:
+                                enemyBullets.Add(new Bullet(b.x, b.y + b.size, p1.x, p1.y, 1));
+                                enemyBullets.Add(new Bullet(b.x + 80, b.y + b.size, p1.x, p1.y, 1));
+                                enemyBullets.Add(new Bullet(b.x + (b.size / 2), b.y + b.size, p1.x, p1.y, 1));
+                                enemyBullets.Add(new Bullet(b.x + (b.size / 2) + 80, b.y + b.size, p1.x, p1.y, 1));
+                                enemyBullets.Add(new Bullet(b.x + b.size, b.y + b.size, p1.x, p1.y, 1));
+                                b.bullets += 5;
+                                bossShooting = true;
+                                lastBossAtk = 2;
+                                bossShootCount = 9;
+                                break;
+                            case 3:
+                                for (int i = 0; i < 19; i++)
+                                {
+                                    enemyBullets.Add(new Bullet(i * 100, 35, (i * 100) + 1, 450, 1));
+                                    enemyBullets.Add(new Bullet(35, i * 80, 450, (i * 80) + 1, 1));
+                                    b.bullets += 2;
+                                }
+                                bossShooting = true;
+                                lastBossAtk = 3;
+                                bossShootCount = 20;
+                                break;
+                        }
+                        b.lastShot = 0;
+                    }
+                    else if (bossShooting)
+                    {
+                        switch (lastBossAtk)
+                        {
+                            case 2:
+                                if (b.lastShot > 10 && bossShootCount > 0)
+                                {
+                                    enemyBullets.Add(new Bullet(b.x, b.y + b.size, p1.x, p1.y, 1));
+                                    enemyBullets.Add(new Bullet(b.x + 80, b.y + b.size, p1.x, p1.y, 1));
+                                    enemyBullets.Add(new Bullet(b.x + (b.size / 2), b.y + b.size, p1.x, p1.y, 1));
+                                    enemyBullets.Add(new Bullet(b.x + (b.size / 2) + 80, b.y + b.size, p1.x, p1.y, 1));
+                                    enemyBullets.Add(new Bullet(b.x + b.size, b.y + b.size, p1.x, p1.y, 1));
+                                    b.bullets += 5;
+                                    b.lastShot = 0;
+                                    bossShootCount--;
+                                }
+                                else if (bossShootCount == 0)
+                                {
+                                    bossShooting = false;
+                                }
+                                break;
+                            case 3:
+                                if (b.lastShot > 3 && bossShootCount > 0)
+                                {
+                                    for (int i = 0; i < 19; i++)
+                                    {
+                                        enemyBullets.Add(new Bullet(i * 100, 35, (i * 100) + 1, 450, 1));
+                                        enemyBullets.Add(new Bullet(35, i * 80, 450, (i * 80) + 1, 1));
+                                        b.bullets += 2;
+                                    }
+                                    b.lastShot = 0;
+                                    bossShootCount--;
+                                }
+                                else if (bossShootCount == 0)
+                                {
+                                    bossShooting = false;
+                                }
+                                break;
+                        }
+                    }
                     break;
                 case 3:
+                    if (b.lastShot > 60 && !bossShooting)
+                    {
+                        int attack = bossRandom.Next(1, 4);
+                        switch (attack)
+                        {
+                            case 1:
+                                AddEnemy("weak", b.x + 10, b.y + b.size + 20);
+                                AddEnemy("weak", b.x + b.size - 10, b.y + b.size + 20);
+                                AddEnemy("weak", b.x + (b.size / 2), b.y + b.size + 20);
+                                break;
+                            case 2:
+                                int centreX = b.x + (b.size / 2);
+                                int centreY = b.y + (b.size / 2);
 
+                                enemyBullets.Add(new Bullet(centreX, centreY, centreX + 1, centreY - 2000, 1));
+                                enemyBullets.Add(new Bullet(centreX, centreY, centreX + 2000, centreY - 2000, 1));
+                                enemyBullets.Add(new Bullet(centreX, centreY, centreX + 2000, centreY + 1, 1));
+                                enemyBullets.Add(new Bullet(centreX, centreY, centreX + 2000, centreY + 2000, 1));
+                                enemyBullets.Add(new Bullet(centreX, centreY, centreX + 1, centreY + 2000, 1));
+                                enemyBullets.Add(new Bullet(centreX, centreY, centreX - 2000, centreY + 2000, 1));
+                                enemyBullets.Add(new Bullet(centreX, centreY, centreX - 2000, centreY + 1, 1));
+                                enemyBullets.Add(new Bullet(centreX, centreY, centreX - 2000, centreY - 2000, 1));
+                                enemyBullets.Add(new Bullet(b.x, b.y + b.size, p1.x, p1.y, 1));
+                                enemyBullets.Add(new Bullet(b.x + 80, b.y + b.size, p1.x, p1.y, 1));
+                                enemyBullets.Add(new Bullet(b.x + (b.size / 2), b.y + b.size, p1.x, p1.y, 1));
+                                enemyBullets.Add(new Bullet(b.x + (b.size / 2) + 80, b.y + b.size, p1.x, p1.y, 1));
+                                enemyBullets.Add(new Bullet(b.x + b.size, b.y + b.size, p1.x, p1.y, 1));
+                                b.bullets += 13;
+                                bossShooting = true;
+                                lastBossAtk = 2;
+                                bossShootCount = 30;
+                                break;
+                            case 3:
+                                for (int i = 0; i < 19; i++)
+                                {
+                                    enemyBullets.Add(new Bullet(i * 100, 35, (i * 100) + 1, 450, 1));
+                                    enemyBullets.Add(new Bullet(35, i * 80, 450, (i * 80) + 1, 1));
+                                    enemyBullets.Add(new Bullet(0, i * 80, 100, (i * 80) + 80, 1));
+                                    b.bullets += 2;
+                                }
+                                bossShooting = true;
+                                lastBossAtk = 3;
+                                bossShootCount = 20;
+                                break;
+                        }
+                        b.lastShot = 0;
+                    }
+                    else if (bossShooting)
+                    {
+                        switch (lastBossAtk)
+                        {
+                            case 2:
+                                if (b.lastShot > 3 && bossShootCount > 0)
+                                {
+                                    int centreX = b.x + (b.size / 2);
+                                    int centreY = b.y + (b.size / 2);
+
+                                    enemyBullets.Add(new Bullet(centreX, centreY, centreX + 10, centreY - 2000, 1));
+                                    enemyBullets.Add(new Bullet(centreX, centreY, centreX + 2000, centreY - 2000, 1));
+                                    enemyBullets.Add(new Bullet(centreX, centreY, centreX + 2000, centreY + 10, 1));
+                                    enemyBullets.Add(new Bullet(centreX, centreY, centreX + 2000, centreY + 2000, 1));
+                                    enemyBullets.Add(new Bullet(centreX, centreY, centreX + 10, centreY + 2000, 1));
+                                    enemyBullets.Add(new Bullet(centreX, centreY, centreX - 2000, centreY + 2000, 1));
+                                    enemyBullets.Add(new Bullet(centreX, centreY, centreX - 2000, centreY + 10, 1));
+                                    enemyBullets.Add(new Bullet(centreX, centreY, centreX - 2000, centreY - 2000, 1));
+                                    enemyBullets.Add(new Bullet(b.x, b.y + b.size, p1.x, p1.y, 1));
+                                    enemyBullets.Add(new Bullet(b.x + 80, b.y + b.size, p1.x, p1.y, 1));
+                                    enemyBullets.Add(new Bullet(b.x + (b.size / 2), b.y + b.size, p1.x, p1.y, 1));
+                                    enemyBullets.Add(new Bullet(b.x + (b.size / 2) + 80, b.y + b.size, p1.x, p1.y, 1));
+                                    enemyBullets.Add(new Bullet(b.x + b.size, b.y + b.size, p1.x, p1.y, 1));
+                                    b.bullets += 13;
+                                    b.lastShot = 0;
+                                    bossShootCount--;
+                                }
+                                else if (bossShootCount == 0)
+                                {
+                                    bossShooting = false;
+                                }
+                                break;
+                            case 3:
+                                if (b.lastShot > 3 && bossShootCount > 0)
+                                {
+                                    for (int i = 0; i < 19; i++)
+                                    {
+                                        enemyBullets.Add(new Bullet(i * 100, 35, (i * 100) + 1, 450, 1));
+                                        enemyBullets.Add(new Bullet(35, i * 80, 450, (i * 80) + 1, 1));
+                                        if (i % 20 == 0)
+                                        {
+                                            enemyBullets.Add(new Bullet(bossRandom.Next(50, 1870), bossRandom.Next(50, 1030), p1.x, p1.y, 1));
+                                        }
+                                        b.bullets += 3;
+                                    }
+                                    b.lastShot = 0;
+                                    bossShootCount--;
+                                }
+                                else if (bossShootCount == 0)
+                                {
+                                    bossShooting = false;
+                                }
+                                break;
+                        }
+                    }
                     break;
-            }
+            } // this code is atrocious
         }
 
         private void AddEnemy(string type, int x, int y)
@@ -537,6 +721,9 @@ namespace Bullet_Dungeon
                     break;
                 case "weak":
                     enemies.Add(new Enemy(x, y, 2, "regular", 2));
+                    break;
+                case "weakSg":
+                    enemies.Add(new Enemy(x, y, 2, "shotgun", 2));
                     break;
             }
         }
