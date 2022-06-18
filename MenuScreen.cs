@@ -22,11 +22,17 @@ namespace Bullet_Dungeon
         private void Setup()
         {
             playButton.Location = new System.Drawing.Point(this.Width / 2 - 300, this.Height / 2 - 100);
+            exitButton.Location = new System.Drawing.Point(this.Width - 300, this.Height - 150);
         }
 
         private void playButton_Click(object sender, EventArgs e)
         {
             Form1.ChangeScreen(this, new GameScreen());
+        }
+
+        private void exitButton_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

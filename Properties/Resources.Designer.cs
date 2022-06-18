@@ -210,6 +210,19 @@ namespace Bullet_Dungeon.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+        ///&lt;Save&gt;
+        ///	&lt;Coins&gt;100&lt;/Coins&gt;
+        ///	&lt;hpChance&gt;100&lt;/hpChance&gt;
+        ///&lt;/Save&gt;.
+        /// </summary>
+        internal static string Save {
+            get {
+                return ResourceManager.GetString("Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap Steel1 {

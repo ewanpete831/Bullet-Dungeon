@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace Bullet_Dungeon
 {
@@ -14,12 +15,37 @@ namespace Bullet_Dungeon
     {
         public static int screenWidth;
         public static int screenHeight;
+        public static int coins;
+        public static int hpChance = 10;
 
         public Form1()
         {
             InitializeComponent();
             setSize();
+
+            GetSave();
             ChangeScreen(this, new MenuScreen());
+        }
+
+        public void GetSave()
+        {
+            string tempCoins, tempHpChance;
+            XmlReader reader = XmlReader.Create("Save.xml");
+            while(reader.Read())
+            {
+                reader.ReadToFollowing("Coins");
+                tempCoins = reader.ReadString();
+
+                reader.ReadToFollowing("hpChance");
+                tempHpChance = reader.ReadString();
+
+                if(tempCoins != "")
+                {
+                    coins = Convert.ToInt32(tempCoins);
+                    hpChance = Convert.ToInt32(tempHpChance);
+                }
+            }
+            reader.Close();
         }
 
         public void setSize()
@@ -52,6 +78,20 @@ namespace Bullet_Dungeon
             f.Controls.Add(next);
 
             next.Focus();
+        }
+
+        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            XmlWriter writer = XmlWriter.Create("Save.xml");
+
+            writer.WriteStartElement("Save");
+
+            writer.WriteElementString("Coins", $"{coins}");
+            writer.WriteElementString("hpChance", $"{hpChance}");
+
+            writer.WriteEndElement();
+
+            writer.Close();
         }
     }
 }

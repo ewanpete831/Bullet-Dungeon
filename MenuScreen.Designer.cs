@@ -30,6 +30,7 @@ namespace Bullet_Dungeon
         private void InitializeComponent()
         {
             this.playButton = new System.Windows.Forms.Button();
+            this.exitButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // playButton
@@ -42,12 +43,23 @@ namespace Bullet_Dungeon
             this.playButton.UseVisualStyleBackColor = true;
             this.playButton.Click += new System.EventHandler(this.playButton_Click);
             // 
+            // exitButton
+            // 
+            this.exitButton.Location = new System.Drawing.Point(803, 43);
+            this.exitButton.Name = "exitButton";
+            this.exitButton.Size = new System.Drawing.Size(300, 150);
+            this.exitButton.TabIndex = 1;
+            this.exitButton.Text = "Exit";
+            this.exitButton.UseVisualStyleBackColor = true;
+            this.exitButton.Click += new System.EventHandler(this.exitButton_Click);
+            // 
             // MenuScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gray;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.exitButton);
             this.Controls.Add(this.playButton);
             this.Name = "MenuScreen";
             this.Size = new System.Drawing.Size(1280, 702);
@@ -58,5 +70,6 @@ namespace Bullet_Dungeon
         #endregion
 
         private System.Windows.Forms.Button playButton;
+        private System.Windows.Forms.Button exitButton;
     }
 }

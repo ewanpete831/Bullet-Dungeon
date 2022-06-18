@@ -34,6 +34,7 @@ namespace Bullet_Dungeon
         Font ammoFont = new Font("Comic Sans MS", 24);
 
         Random bossRandom = new Random();
+        Random powerupRand = new Random();
         Image[] steel = new Image[3];
 
         int health;
@@ -57,6 +58,8 @@ namespace Bullet_Dungeon
         int sprite = 1;
         int spriteSwitch;
 
+        int lastEnemyX, lastEnemyY;
+
         bool upPressed, downPressed, rightPressed, leftPressed;
         bool lastUp, lastDown, lastRight, lastLeft;
 
@@ -64,6 +67,7 @@ namespace Bullet_Dungeon
         List<Bullet> enemyBullets = new List<Bullet>();
         List<Obstacle> levelObstacles = new List<Obstacle>();
         List<Enemy> enemies = new List<Enemy>();
+        List<Consumable> consumables = new List<Consumable>();
 
         public GameScreen()
         {
@@ -341,6 +345,19 @@ namespace Bullet_Dungeon
             {
                 if (enemies[i].hp < 1)
                 {
+                    int hpRoll = powerupRand.Next(1, 101);
+                    if (hpRoll < Form1.hpChance)
+                    {
+                        consumables.Add(new Consumable(enemies[i].x, enemies[i].y, "hp"));
+                    }
+                    int coinRoll = powerupRand.Next(1, 4);
+                    if(coinRoll == 1)
+                    {
+                        consumables.Add(new Consumable(enemies[i].x, enemies[i].y, "coin"));
+                    }
+
+                    lastEnemyX = enemies[i].x;
+                    lastEnemyY = enemies[i].y;
                     enemies.RemoveAt(i);
                 }
             }
@@ -408,16 +425,42 @@ namespace Bullet_Dungeon
             }
             #endregion
 
+            #region consumables
+            for (int i = 0; i < consumables.Count; i++)
+            {
+                if (p1.Collect(consumables[i]))
+                {
+                    switch (consumables[i].type)
+                    {
+                        case "hp":
+                            health++;
+                            consumables.RemoveAt(i);
+                            break;
+                        case "coin":
+                            Form1.coins++;
+                            consumables.RemoveAt(i);
+                            break;
+                        case "door":
+                            consumables.Clear();
+                            level++;
+                            LoadLevel(level);
+                            enemyBullets.Clear();
+                            playerBullets.Clear();
+                            p1.x = 100;
+                            p1.y = Form1.screenHeight - 100;
+                            break;
+                    }
+                }
+            }
+
+            #endregion
+
+            //end level / game
             if (enemies.Count < 1)
             {
-                level++;
-                LoadLevel(level);
-                enemyBullets.Clear();
-                playerBullets.Clear();
-                p1.x = 100;
-                p1.y = Form1.screenHeight - 100;
+                consumables.Add(new Consumable(lastEnemyX, lastEnemyY, "door"));
             }
-            if(health < 1)
+            if (health < 1)
             {
                 GameEnd(false);
             }
@@ -881,6 +924,24 @@ namespace Bullet_Dungeon
                     e.Graphics.FillRectangle(testBrush, Form1.screenWidth - 50, Form1.screenHeight - (25 * (i + 1)), 40, 20);
                 }
             }
+
+            foreach (Consumable c in consumables)
+            {
+                switch (c.type)
+                {
+                    case "hp":
+                        e.Graphics.FillEllipse(bossBrush, c.x, c.y, c.size, c.size);
+                        break;
+                    case "coin":
+                        e.Graphics.FillEllipse(Brushes.Wheat, c.x, c.y, c.size, c.size);
+                        break;
+                    case "door":
+                        e.Graphics.FillRectangle(Brushes.Brown, c.x, c.y, 30, 60);
+                        break;
+                }
+            }
+            e.Graphics.DrawString($"{Form1.coins}", testFont, testBrush, 10, 10);
+
         }
     }
 }

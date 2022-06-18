@@ -108,5 +108,16 @@ namespace Bullet_Dungeon
                 }
             }
         }
+        public bool Collect(Consumable c)
+        {
+            Rectangle pRect = new Rectangle(x, y, size, size);
+            Rectangle cRect = new Rectangle(c.x, c.y, c.size, c.size);
+
+            if(pRect.IntersectsWith(cRect))
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
