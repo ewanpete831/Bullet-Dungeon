@@ -16,7 +16,7 @@ namespace Bullet_Dungeon
         public static int screenWidth;
         public static int screenHeight;
         public static int coins;
-        public static int hpChance = 10;
+        public static bool steel = false;
 
         public Form1()
         {
@@ -29,20 +29,16 @@ namespace Bullet_Dungeon
 
         public void GetSave()
         {
-            string tempCoins, tempHpChance;
+            string tempCoins;
             XmlReader reader = XmlReader.Create("Save.xml");
             while(reader.Read())
             {
                 reader.ReadToFollowing("Coins");
                 tempCoins = reader.ReadString();
 
-                reader.ReadToFollowing("hpChance");
-                tempHpChance = reader.ReadString();
-
                 if(tempCoins != "")
                 {
                     coins = Convert.ToInt32(tempCoins);
-                    hpChance = Convert.ToInt32(tempHpChance);
                 }
             }
             reader.Close();
@@ -87,7 +83,6 @@ namespace Bullet_Dungeon
             writer.WriteStartElement("Save");
 
             writer.WriteElementString("Coins", $"{coins}");
-            writer.WriteElementString("hpChance", $"{hpChance}");
 
             writer.WriteEndElement();
 

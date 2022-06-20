@@ -79,7 +79,7 @@ namespace Bullet_Dungeon
         public bool HitEnemy(Enemy r)
         {
             Rectangle bulletRect = new Rectangle(x, y, size, size);
-            if (r.type != "Boss")
+            if (r.type != "Boss" || !Form1.steel)
             {
                 Rectangle enemyRect = new Rectangle(r.x, r.y, r.size, r.size); 
 

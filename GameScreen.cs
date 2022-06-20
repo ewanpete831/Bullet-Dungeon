@@ -28,10 +28,11 @@ namespace Bullet_Dungeon
         SolidBrush turretBrush = new SolidBrush(Color.DarkGoldenrod);
         SolidBrush enemyBulletBrush = new SolidBrush(Color.Orange);
         SolidBrush bossBrush = new SolidBrush(Color.Aquamarine);
+        SolidBrush coinBrush = new SolidBrush(Color.Gold);
 
-        Pen testPen = new Pen(Color.White);
         Font testFont = new Font("Times New Roman", 12);
         Font ammoFont = new Font("Comic Sans MS", 24);
+        Font coinFont = new Font("Comic Sans MS", 24);
 
         Random bossRandom = new Random();
         Random powerupRand = new Random();
@@ -47,7 +48,6 @@ namespace Bullet_Dungeon
         int lastBossAtk;
         int bossShootCount;
 
-        int fadeTimer;
         int maxAmmo;
         int tempInvuln;
         int ammo;
@@ -187,6 +187,7 @@ namespace Bullet_Dungeon
             foreach (Enemy r in enemies)
             {
                 r.lastShot++;
+                r.lastHit++;
             }
             if (tempInvuln > 0)
             {
@@ -195,10 +196,6 @@ namespace Bullet_Dungeon
             if (tempInvuln == 1)
             {
                 p1.invulnerable = false;
-            }
-            if (fadeTimer > 0)
-            {
-                fadeTimer -= 10;
             }
             spriteSwitch++;
             if (spriteSwitch > 4)
@@ -336,6 +333,7 @@ namespace Bullet_Dungeon
                     if (playerBullets[i].HitEnemy(r))
                     {
                         r.hp--;
+                        r.lastHit = 0;
                         playerBullets.RemoveAt(i);
                     }
                 }
@@ -346,7 +344,7 @@ namespace Bullet_Dungeon
                 if (enemies[i].hp < 1)
                 {
                     int hpRoll = powerupRand.Next(1, 101);
-                    if (hpRoll < Form1.hpChance)
+                    if (hpRoll < 10)
                     {
                         consumables.Add(new Consumable(enemies[i].x, enemies[i].y, "hp"));
                     }
@@ -893,25 +891,51 @@ namespace Bullet_Dungeon
                 switch (r.type)
                 {
                     case "regular":
-                        e.Graphics.FillRectangle(regEnemyBrush, r.x, r.y, r.size, r.size);
+                        if (r.lastHit < 3)
+                        {
+                            e.Graphics.FillRectangle(testBrush, r.x, r.y, r.size, r.size);
+                        }
+                        else
+                        {
+                            e.Graphics.FillRectangle(regEnemyBrush, r.x, r.y, r.size, r.size);
+                        }
+
                         break;
                     case "shotgun":
-                        e.Graphics.FillRectangle(shotgunBrush, r.x, r.y, r.size, r.size);
+                        if (r.lastHit < 3)
+                        {
+                            e.Graphics.FillRectangle(testBrush, r.x, r.y, r.size, r.size);
+                        }
+                        else
+                        {
+                            e.Graphics.FillRectangle(shotgunBrush, r.x, r.y, r.size, r.size);
+                        }
                         break;
                     case "turret":
-                        e.Graphics.FillRectangle(turretBrush, r.x, r.y, r.size, r.size);
+                        if (r.lastHit < 3)
+                        {
+                            e.Graphics.FillRectangle(testBrush, r.x, r.y, r.size, r.size);
+                        }
+                        else
+                        {
+                            e.Graphics.FillRectangle(turretBrush, r.x, r.y, r.size, r.size);
+                        }
                         break;
                     case "Boss":
-                        e.Graphics.DrawImage(steel[sprite], r.x, r.y, 320, 320);
+                        if(Form1.steel)
+                        {e.Graphics.DrawImage(steel[sprite], r.x, r.y, 320, 320);}
+                        else
+                        {
+                            e.Graphics.FillRectangle(bossBrush, r.x, r.y, r.size, r.size);
+                        }
+                        
                         break;
                 }
-                e.Graphics.DrawString($"{r.hp}, {r.bullets}", testFont, playerBrush, r.x, r.y);
             }
-
 
             for (int i = 0; i < health; i++)
             {
-                e.Graphics.FillRectangle(playerBrush, (35 * i) + 5, 5, 30, 30);
+                e.Graphics.DrawImage(Properties.Resources.heart__1_, (35 * i) + 5, 5, 30, 30);
             }
             if (reloading)
             {
@@ -930,18 +954,18 @@ namespace Bullet_Dungeon
                 switch (c.type)
                 {
                     case "hp":
-                        e.Graphics.FillEllipse(bossBrush, c.x, c.y, c.size, c.size);
+                        e.Graphics.DrawImage(Properties.Resources.heart__1_, c.x, c.y, 30, 30);
                         break;
                     case "coin":
-                        e.Graphics.FillEllipse(Brushes.Wheat, c.x, c.y, c.size, c.size);
+                        e.Graphics.DrawImage(Properties.Resources.coin, c.x, c.y, 30, 30);
                         break;
                     case "door":
                         e.Graphics.FillRectangle(Brushes.Brown, c.x, c.y, 30, 60);
                         break;
                 }
             }
-            e.Graphics.DrawString($"{Form1.coins}", testFont, testBrush, 10, 10);
-
+            e.Graphics.DrawImage(Properties.Resources.coin, 5, 40, 30, 30);
+            e.Graphics.DrawString($"{Form1.coins}", coinFont, coinBrush, 40, 30);
         }
     }
 }

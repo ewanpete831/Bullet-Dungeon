@@ -67,6 +67,12 @@
     <Compile Include="GameScreen.Designer.cs">
       <DependentUpon>GameScreen.cs</DependentUpon>
     </Compile>
+    <Compile Include="InstructionScreen.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="InstructionScreen.Designer.cs">
+      <DependentUpon>InstructionScreen.cs</DependentUpon>
+    </Compile>
     <Compile Include="MenuScreen.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -85,6 +91,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GameScreen.resx">
       <DependentUpon>GameScreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InstructionScreen.resx">
+      <DependentUpon>InstructionScreen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MenuScreen.resx">
       <DependentUpon>MenuScreen.cs</DependentUpon>
@@ -125,6 +134,8 @@
     <Content Include="Level4.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\heart %281%29.png" />
+    <None Include="Resources\coin.png" />
     <Content Include="Save.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

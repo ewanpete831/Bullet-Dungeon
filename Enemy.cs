@@ -9,7 +9,7 @@ namespace Bullet_Dungeon
 {
     class Enemy
     {
-        public int x, y, hp, bullets, speed, lastShot;
+        public int x, y, hp, bullets, speed, lastShot, lastHit;
         public int size = 20;
         public string type;
 

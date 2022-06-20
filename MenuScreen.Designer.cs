@@ -31,10 +31,13 @@ namespace Bullet_Dungeon
         {
             this.playButton = new System.Windows.Forms.Button();
             this.exitButton = new System.Windows.Forms.Button();
+            this.titleLabel = new System.Windows.Forms.Label();
+            this.instructionButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // playButton
             // 
+            this.playButton.Font = new System.Drawing.Font("Comic Sans MS", 48F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.playButton.Location = new System.Drawing.Point(0, 0);
             this.playButton.Name = "playButton";
             this.playButton.Size = new System.Drawing.Size(600, 200);
@@ -45,6 +48,7 @@ namespace Bullet_Dungeon
             // 
             // exitButton
             // 
+            this.exitButton.Font = new System.Drawing.Font("Comic Sans MS", 26.25F, System.Drawing.FontStyle.Bold);
             this.exitButton.Location = new System.Drawing.Point(803, 43);
             this.exitButton.Name = "exitButton";
             this.exitButton.Size = new System.Drawing.Size(300, 150);
@@ -53,17 +57,41 @@ namespace Bullet_Dungeon
             this.exitButton.UseVisualStyleBackColor = true;
             this.exitButton.Click += new System.EventHandler(this.exitButton_Click);
             // 
+            // titleLabel
+            // 
+            this.titleLabel.AutoSize = true;
+            this.titleLabel.Font = new System.Drawing.Font("Comic Sans MS", 72F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.titleLabel.Location = new System.Drawing.Point(500, 100);
+            this.titleLabel.Name = "titleLabel";
+            this.titleLabel.Size = new System.Drawing.Size(953, 135);
+            this.titleLabel.TabIndex = 2;
+            this.titleLabel.Text = "The Bullet Dungeon";
+            // 
+            // instructionButton
+            // 
+            this.instructionButton.Font = new System.Drawing.Font("Comic Sans MS", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.instructionButton.Location = new System.Drawing.Point(28, 265);
+            this.instructionButton.Name = "instructionButton";
+            this.instructionButton.Size = new System.Drawing.Size(429, 124);
+            this.instructionButton.TabIndex = 3;
+            this.instructionButton.Text = "Instructions";
+            this.instructionButton.UseVisualStyleBackColor = true;
+            this.instructionButton.Click += new System.EventHandler(this.instructionButton_Click);
+            // 
             // MenuScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gray;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.instructionButton);
+            this.Controls.Add(this.titleLabel);
             this.Controls.Add(this.exitButton);
             this.Controls.Add(this.playButton);
             this.Name = "MenuScreen";
             this.Size = new System.Drawing.Size(1280, 702);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -71,5 +99,7 @@ namespace Bullet_Dungeon
 
         private System.Windows.Forms.Button playButton;
         private System.Windows.Forms.Button exitButton;
+        private System.Windows.Forms.Label titleLabel;
+        private System.Windows.Forms.Button instructionButton;
     }
 }

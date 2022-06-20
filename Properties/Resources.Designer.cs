@@ -61,6 +61,26 @@ namespace Bullet_Dungeon.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap coin {
+            get {
+                object obj = ResourceManager.GetObject("coin", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap heart__1_ {
+            get {
+                object obj = ResourceManager.GetObject("heart__1_", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
         ///&lt;obstacles&gt;
         ///	&lt;obstacle&gt;
@@ -212,8 +232,8 @@ namespace Bullet_Dungeon.Properties {
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
         ///&lt;Save&gt;
-        ///	&lt;Coins&gt;100&lt;/Coins&gt;
-        ///	&lt;hpChance&gt;100&lt;/hpChance&gt;
+        ///	&lt;Coins&gt;0&lt;/Coins&gt;
+        ///	&lt;hpChance&gt;10&lt;/hpChance&gt;
         ///&lt;/Save&gt;.
         /// </summary>
         internal static string Save {
