@@ -17,5 +17,10 @@ namespace Bullet_Dungeon
             InitializeComponent();
             this.Size = Screen.FromControl(this).Bounds.Size;
         }
+
+        private void menuButton_Click(object sender, EventArgs e)
+        {
+            Form1.ChangeScreen(this, new MenuScreen());
+        }
     }
 }

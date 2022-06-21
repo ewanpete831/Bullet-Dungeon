@@ -30,6 +30,8 @@ namespace Bullet_Dungeon
         SolidBrush bossBrush = new SolidBrush(Color.Aquamarine);
         SolidBrush coinBrush = new SolidBrush(Color.Gold);
 
+        SolidBrush hpBarBrush = new SolidBrush(Color.Red);
+
         Font testFont = new Font("Times New Roman", 12);
         Font ammoFont = new Font("Comic Sans MS", 24);
         Font coinFont = new Font("Comic Sans MS", 24);
@@ -47,6 +49,9 @@ namespace Bullet_Dungeon
         int bossPhase;
         int lastBossAtk;
         int bossShootCount;
+
+        bool paused = false;
+        bool escunpressed = true;
 
         int maxAmmo;
         int tempInvuln;
@@ -72,17 +77,27 @@ namespace Bullet_Dungeon
         public GameScreen()
         {
             InitializeComponent();
+            SetupScreen();
+            OnStart();
+        }
+
+        private void SetupScreen()
+        {
             this.Size = Screen.FromControl(this).Bounds.Size;
             steel[0] = Properties.Resources.Steel1;
             steel[1] = Properties.Resources.Steel2;
             steel[2] = Properties.Resources.Steel3;
-            OnStart();
+
+            pauseLabel.Location = new System.Drawing.Point((this.Width / 2) - 340, 200);
+            menuButton.Location = new System.Drawing.Point((this.Width / 2) - 150, 400);
+            menuButton.Visible = false;
+            pauseLabel.Visible = false;
         }
 
         private void OnStart()
         {
             health = 4;
-            level = 1;
+            level = 4;
 
             p1.invulnerable = false;
             bossRight = false;
@@ -119,6 +134,9 @@ namespace Bullet_Dungeon
                 case Keys.R:
                     Reload();
                     break;
+                case Keys.Escape:
+                    tryPause();
+                    break;
             }
         }
         private void GameScreen_KeyUp(object sender, KeyEventArgs e)
@@ -137,6 +155,35 @@ namespace Bullet_Dungeon
                 case Keys.D:
                     rightPressed = false;
                     break;
+                case Keys.Escape:
+                    escunpressed = true;
+                    break;
+            }
+        }
+
+        private void tryPause()
+        {
+            if (paused == false)
+            {
+                if (escunpressed == true) // pause game
+                {
+                    pauseLabel.Visible = true;
+                    menuButton.Visible = true;
+                    gameTimer.Stop();
+                    paused = true;
+                    escunpressed = false;
+                }
+            }
+            else
+            {
+                if (escunpressed == true) // unpause game
+                {
+                    pauseLabel.Visible = false;
+                    menuButton.Visible = false;
+                    gameTimer.Start();
+                    paused = false;
+                    escunpressed = false;
+                }
             }
         }
 
@@ -349,7 +396,7 @@ namespace Bullet_Dungeon
                         consumables.Add(new Consumable(enemies[i].x, enemies[i].y, "hp"));
                     }
                     int coinRoll = powerupRand.Next(1, 4);
-                    if(coinRoll == 1)
+                    if (coinRoll == 1)
                     {
                         consumables.Add(new Consumable(enemies[i].x, enemies[i].y, "coin"));
                     }
@@ -454,6 +501,7 @@ namespace Bullet_Dungeon
             #endregion
 
             //end level / game
+            #region
             if (enemies.Count < 1)
             {
                 consumables.Add(new Consumable(lastEnemyX, lastEnemyY, "door"));
@@ -462,19 +510,46 @@ namespace Bullet_Dungeon
             {
                 GameEnd(false);
             }
+            
+
+            foreach (Enemy r in enemies)
+            {
+                if (r.type == "Boss" && r.hp == 1)
+                {
+                    gameTimer.Stop();
+                    enemyBullets.Clear();
+                    playerBullets.Clear();
+                    Refresh();
+                    Thread.Sleep(2000);
+                    GameEnd(true);
+                }
+            }
+            #endregion
 
             Refresh();
         }
 
+        private void menuButton_Click(object sender, EventArgs e)
+        {
+            GameEnd(false);
+        }
+
         private void GameEnd(bool win)
         {
+            if (win)
+            {
+                Form1.win = true;
+            }
+            else
+            {
+                Form1.win = false;
+            }
             enemyBullets.Clear();
             playerBullets.Clear();
 
             gameTimer.Enabled = false;
             Form1.ChangeScreen(this, new EndScreen());
         }
-
         private void BossMove(Enemy b)
         {
             if (b.hp < 50)
@@ -922,13 +997,12 @@ namespace Bullet_Dungeon
                         }
                         break;
                     case "Boss":
-                        if(Form1.steel)
-                        {e.Graphics.DrawImage(steel[sprite], r.x, r.y, 320, 320);}
+                        if (Form1.steel)
+                        { e.Graphics.DrawImage(steel[sprite], r.x, r.y, 320, 320); }
                         else
                         {
                             e.Graphics.FillRectangle(bossBrush, r.x, r.y, r.size, r.size);
                         }
-                        
                         break;
                 }
             }
@@ -966,6 +1040,14 @@ namespace Bullet_Dungeon
             }
             e.Graphics.DrawImage(Properties.Resources.coin, 5, 40, 30, 30);
             e.Graphics.DrawString($"{Form1.coins}", coinFont, coinBrush, 40, 30);
+
+            foreach (Enemy r in enemies)
+            {
+                if (r.type == "Boss")
+                {
+                    e.Graphics.FillRectangle(hpBarBrush, 55, 40, r.hp * 9, 15);
+                }
+            }
         }
     }
 }

@@ -17,6 +17,7 @@ namespace Bullet_Dungeon
         public static int screenHeight;
         public static int coins;
         public static bool steel = false;
+        public static bool win = false;
 
         public Form1()
         {

@@ -46,7 +46,8 @@ namespace Bullet_Dungeon
             // 
             // menuButton
             // 
-            this.menuButton.Location = new System.Drawing.Point(260, 479);
+            this.menuButton.Font = new System.Drawing.Font("Comic Sans MS", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.menuButton.Location = new System.Drawing.Point(550, 540);
             this.menuButton.Name = "menuButton";
             this.menuButton.Size = new System.Drawing.Size(260, 149);
             this.menuButton.TabIndex = 1;
@@ -56,7 +57,8 @@ namespace Bullet_Dungeon
             // 
             // playButton
             // 
-            this.playButton.Location = new System.Drawing.Point(939, 479);
+            this.playButton.Font = new System.Drawing.Font("Comic Sans MS", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.playButton.Location = new System.Drawing.Point(579, 261);
             this.playButton.Name = "playButton";
             this.playButton.Size = new System.Drawing.Size(260, 149);
             this.playButton.TabIndex = 2;
