@@ -24,6 +24,7 @@ namespace Bullet_Dungeon
             playButton.Location = new System.Drawing.Point(this.Width / 2 - 300, this.Height / 2 - 100);
             instructionButton.Location = new System.Drawing.Point((this.Width / 2) - 210, (this.Height / 2) + 130);
             exitButton.Location = new System.Drawing.Point(this.Width - 310, this.Height - 160);
+            optionButton.Location = new System.Drawing.Point((this.Width / 2) - 130, (this.Height / 2) + 290);
         }
 
         private void playButton_Click(object sender, EventArgs e)
@@ -39,6 +40,11 @@ namespace Bullet_Dungeon
         private void instructionButton_Click(object sender, EventArgs e)
         {
             Form1.ChangeScreen(this, new InstructionScreen());
+        }
+
+        private void optionButton_Click(object sender, EventArgs e)
+        {
+            Form1.ChangeScreen(this, new OptionScreen());
         }
     }
 }

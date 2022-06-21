@@ -101,7 +101,7 @@ namespace Bullet_Dungeon
         private void OnStart()
         {
             health = 4;
-            level = 4;
+            level = 1;
 
             p1.invulnerable = false;
             bossRight = false;

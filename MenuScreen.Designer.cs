@@ -33,6 +33,7 @@ namespace Bullet_Dungeon
             this.exitButton = new System.Windows.Forms.Button();
             this.titleLabel = new System.Windows.Forms.Label();
             this.instructionButton = new System.Windows.Forms.Button();
+            this.optionButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // playButton
@@ -78,12 +79,24 @@ namespace Bullet_Dungeon
             this.instructionButton.UseVisualStyleBackColor = true;
             this.instructionButton.Click += new System.EventHandler(this.instructionButton_Click);
             // 
+            // optionButton
+            // 
+            this.optionButton.Font = new System.Drawing.Font("Comic Sans MS", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.optionButton.Location = new System.Drawing.Point(58, 475);
+            this.optionButton.Name = "optionButton";
+            this.optionButton.Size = new System.Drawing.Size(257, 124);
+            this.optionButton.TabIndex = 4;
+            this.optionButton.Text = "Options";
+            this.optionButton.UseVisualStyleBackColor = true;
+            this.optionButton.Click += new System.EventHandler(this.optionButton_Click);
+            // 
             // MenuScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gray;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.optionButton);
             this.Controls.Add(this.instructionButton);
             this.Controls.Add(this.titleLabel);
             this.Controls.Add(this.exitButton);
@@ -101,5 +114,6 @@ namespace Bullet_Dungeon
         private System.Windows.Forms.Button exitButton;
         private System.Windows.Forms.Label titleLabel;
         private System.Windows.Forms.Button instructionButton;
+        private System.Windows.Forms.Button optionButton;
     }
 }
