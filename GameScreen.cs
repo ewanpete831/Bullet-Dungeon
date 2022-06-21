@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
 using System.Xml;
+using System.Media;
 
 namespace Bullet_Dungeon
 {
@@ -16,6 +17,9 @@ namespace Bullet_Dungeon
     {
         Player p1 = new Player(0, 0);
 
+        SoundPlayer shoot = new SoundPlayer(Properties.Resources.shootsound);
+        SoundPlayer hit = new SoundPlayer(Properties.Resources.hitsound);
+        
         SolidBrush playerBrush = new SolidBrush(Color.Red);
         SolidBrush playerBulletBrush = new SolidBrush(Color.Purple);
 
@@ -193,6 +197,7 @@ namespace Bullet_Dungeon
             {
                 if (ammo > 0 && shotInterval == 0 && reloading == false)
                 {
+                    shoot.Play();
                     playerBullets.Add(new Bullet(p1.x, p1.y, System.Windows.Forms.Cursor.Position.X, System.Windows.Forms.Cursor.Position.Y, 0));
                     shotInterval = 6;
                     ammo -= 1;
@@ -369,6 +374,8 @@ namespace Bullet_Dungeon
                         }
                         catch { }
                         enemyBullets.RemoveAt(i);
+
+                        hit.Play();
                     }
                 }
             }
@@ -382,6 +389,7 @@ namespace Bullet_Dungeon
                         r.hp--;
                         r.lastHit = 0;
                         playerBullets.RemoveAt(i);
+                        hit.Play();
                     }
                 }
             }

@@ -136,6 +136,8 @@
     </Content>
     <None Include="Resources\heart %281%29.png" />
     <None Include="Resources\coin.png" />
+    <None Include="Resources\hitsound.wav" />
+    <None Include="Resources\shootsound.wav" />
     <Content Include="Save.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

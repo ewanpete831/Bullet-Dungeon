@@ -124,6 +124,9 @@
   <data name="heart__1_" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\heart (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="hitsound" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\hitsound.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="Level1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Level1.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
@@ -138,6 +141,9 @@
   </data>
   <data name="Save" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Save.xml;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="shootsound" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\shootsound.wav;System.IO.MemoryStream, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="Steel1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\CroppedSteel1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
