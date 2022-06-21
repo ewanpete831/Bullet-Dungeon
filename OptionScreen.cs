@@ -28,6 +28,15 @@ namespace Bullet_Dungeon
             {
                 steelButton.BackColor = Color.Red;
             }
+
+            if(Form1.easyMode == true)
+            {
+                easyButton.BackColor = Color.Green;
+            }
+            else
+            {
+                easyButton.BackColor = Color.Red;
+            }
         }
 
         private void returnButton_Click(object sender, EventArgs e)
@@ -46,6 +55,20 @@ namespace Bullet_Dungeon
             {
                 Form1.steel = false;
                 steelButton.BackColor = Color.Red;
+            }
+        }
+
+        private void easyButton_Click(object sender, EventArgs e)
+        {
+            if (Form1.easyMode == false)
+            {
+                Form1.easyMode = true;
+                easyButton.BackColor = Color.Green;
+            }
+            else
+            {
+                Form1.easyMode = false;
+                easyButton.BackColor = Color.Red;
             }
         }
     }

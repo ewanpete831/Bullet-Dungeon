@@ -19,6 +19,7 @@ namespace Bullet_Dungeon
         public static int coins;
         public static bool steel = false;
         public static bool win = false;
+        public static bool easyMode = false;
 
         public Form1()
         {

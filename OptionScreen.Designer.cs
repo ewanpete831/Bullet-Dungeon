@@ -33,6 +33,8 @@ namespace Bullet_Dungeon
             this.returnButton = new System.Windows.Forms.Button();
             this.steelButton = new System.Windows.Forms.Button();
             this.instructionLabel = new System.Windows.Forms.Label();
+            this.easyLabel = new System.Windows.Forms.Label();
+            this.easyButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // endLabel
@@ -77,10 +79,33 @@ namespace Bullet_Dungeon
             this.instructionLabel.TabIndex = 7;
             this.instructionLabel.Text = "Steel";
             // 
+            // easyLabel
+            // 
+            this.easyLabel.AutoSize = true;
+            this.easyLabel.Font = new System.Drawing.Font("Comic Sans MS", 36F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.easyLabel.Location = new System.Drawing.Point(295, 439);
+            this.easyLabel.Name = "easyLabel";
+            this.easyLabel.Size = new System.Drawing.Size(279, 67);
+            this.easyLabel.TabIndex = 9;
+            this.easyLabel.Text = "Easy Mode";
+            // 
+            // easyButton
+            // 
+            this.easyButton.BackColor = System.Drawing.Color.Red;
+            this.easyButton.Font = new System.Drawing.Font("Comic Sans MS", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.easyButton.Location = new System.Drawing.Point(122, 432);
+            this.easyButton.Name = "easyButton";
+            this.easyButton.Size = new System.Drawing.Size(100, 91);
+            this.easyButton.TabIndex = 8;
+            this.easyButton.UseVisualStyleBackColor = false;
+            this.easyButton.Click += new System.EventHandler(this.easyButton_Click);
+            // 
             // OptionScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.easyLabel);
+            this.Controls.Add(this.easyButton);
             this.Controls.Add(this.instructionLabel);
             this.Controls.Add(this.steelButton);
             this.Controls.Add(this.returnButton);
@@ -98,5 +123,7 @@ namespace Bullet_Dungeon
         private System.Windows.Forms.Button returnButton;
         private System.Windows.Forms.Button steelButton;
         private System.Windows.Forms.Label instructionLabel;
+        private System.Windows.Forms.Label easyLabel;
+        private System.Windows.Forms.Button easyButton;
     }
 }

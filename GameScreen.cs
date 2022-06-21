@@ -19,7 +19,7 @@ namespace Bullet_Dungeon
 
         SoundPlayer shoot = new SoundPlayer(Properties.Resources.shootsound);
         SoundPlayer hit = new SoundPlayer(Properties.Resources.hitsound);
-        
+
         SolidBrush playerBrush = new SolidBrush(Color.Red);
         SolidBrush playerBulletBrush = new SolidBrush(Color.Purple);
 
@@ -100,7 +100,14 @@ namespace Bullet_Dungeon
 
         private void OnStart()
         {
-            health = 4;
+            if (Form1.easyMode == true)
+            {
+                health = 50;
+            }
+            else
+            {
+                health = 4;
+            }
             level = 1;
 
             p1.invulnerable = false;
@@ -518,7 +525,7 @@ namespace Bullet_Dungeon
             {
                 GameEnd(false);
             }
-            
+
 
             foreach (Enemy r in enemies)
             {
